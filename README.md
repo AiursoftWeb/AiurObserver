@@ -6,7 +6,11 @@
 [![NuGet version (Aiursoft.AiurObserver)](https://img.shields.io/nuget/v/Aiursoft.AiurObserver.svg)](https://www.nuget.org/packages/Aiursoft.AiurObserver/)
 [![ManHours](https://manhours.aiursoft.cn/r/gitlab.aiursoft.cn/aiursoft/AiurObserver.svg)](https://gitlab.aiursoft.cn/aiursoft/AiurObserver/-/commits/master?ref_type=heads)
 
-AiurObserver is an async event driven framework.
+AiurObserver is an async tool to help you broadcast messages to multiple subscribers.
+
+Call `Subscribe()` to subscribe to an observable. Call `BroadcastAsync()` to broadcast a message to all subscribers. That's it!
+
+![structure](assets/structure.png)
 
 ## How to install
 
@@ -37,15 +41,8 @@ for (var i = 0; i < 10; i++)
     await asyncObservable.BroadcastAsync(2333);
 }
 
-Assert.AreEqual(10, totalMessages);
-
-subscription.UnRegister();
-        
-for (var i = 0; i < 20; i++)
-{
-    await asyncObservable.BroadcastAsync(2333);
-}
-Assert.AreEqual(10, totalMessages);
+Console.WriteLine(totalMessages); // 10
+subscription.UnRegister(); // No longer receive messages.
 ```
 
 ## How to contribute
