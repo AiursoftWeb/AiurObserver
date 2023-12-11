@@ -2,6 +2,6 @@
 {
     public interface IAsyncObserver<in T>
     {
-        public Func<T, Task> OnTrigger { get; }
+        public Func<T, Task> OnNext { get; }
     }
 }

@@ -38,7 +38,7 @@
 
         public IEnumerable<Task> Broadcast(T newEvent)
         {
-            return Observers.Select(t => t.OnTrigger(newEvent));
+            return Observers.Select(t => t.OnNext(newEvent));
         }
         
         public async Task BroadcastAsync(T newEvent)
