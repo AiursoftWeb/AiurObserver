@@ -72,7 +72,7 @@ public class IntegrationTests
     }
 
     [TestMethod]
-    public async Task UnRegisterMultiTimesFailedTest()
+    public void UnRegisterMultiTimesFailedTest()
     {
         var asyncObservable = new AsyncObservable<int>();
         var subscription = asyncObservable.Subscribe(_ => Task.CompletedTask);
