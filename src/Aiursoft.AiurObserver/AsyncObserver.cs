@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Aiursoft.AiurObserver
+﻿namespace Aiursoft.AiurObserver
 {
     internal class AsyncObserver<T> : IAsyncObserver<T>
     {
@@ -8,7 +6,6 @@ namespace Aiursoft.AiurObserver
 
         internal AsyncObserver(Func<T, Task> onNext)
         {
-            IObserver
             OnNext = onNext;
         }
     }
