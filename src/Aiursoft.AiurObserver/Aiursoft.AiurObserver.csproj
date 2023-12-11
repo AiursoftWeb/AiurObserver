@@ -12,9 +12,9 @@
     <Nullable>enable</Nullable>
     <Company>Aiursoft</Company>
     <Product>AiurObserver</Product>
-    <Description>Nuget package of 'AiurObserver' provided by Aiursoft</Description>
+    <Description>AiurObserver is an async event driven framework.</Description>
     <PackageId>Aiursoft.AiurObserver</PackageId>
-    <PackageTags>nuget package dotnet csproj dependencies</PackageTags>
+    <PackageTags>nuget package dotnet async observer</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>

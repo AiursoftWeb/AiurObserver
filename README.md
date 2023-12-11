@@ -14,6 +14,40 @@ AiurObserver is an async event driven framework.
 dotnet add package Aiursoft.AiurObserver
 ```
 
+## How to use
+
+It's very simple. You can create a class extends AsyncObservable<T> and then you can subscribe to it and broadcast messages to it.
+
+`T` is the type of the message you want to broadcast.
+
+If you no longer need to subscribe to the observable, you can call `UnRegister` method to unsubscribe.
+
+Full example:
+
+```csharp
+var totalMessages = 0;
+var asyncObservable = new AsyncObservable<int>();
+var subscription = asyncObservable.Subscribe(_ =>
+{
+    totalMessages++;
+    return Task.CompletedTask;
+});
+for (var i = 0; i < 10; i++)
+{
+    await asyncObservable.BroadcastAsync(2333);
+}
+
+Assert.AreEqual(10, totalMessages);
+
+subscription.UnRegister();
+        
+for (var i = 0; i < 20; i++)
+{
+    await asyncObservable.BroadcastAsync(2333);
+}
+Assert.AreEqual(10, totalMessages);
+```
+
 ## How to contribute
 
 There are many ways to contribute to the project: logging bugs, submitting pull requests, reporting issues, and creating suggestions.
