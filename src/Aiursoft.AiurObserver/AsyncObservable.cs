@@ -2,10 +2,10 @@
 {
     public class AsyncObservable<T> : IAsyncObservable<T>
     {
-        protected readonly List<IAsyncObserver<T>> Observers = new();
+        protected readonly List<IConsumer<T>> Observers = new();
         private readonly object _lock = new();
 
-        public ISubscription Subscribe(IAsyncObserver<T> observer)
+        public ISubscription Subscribe(IConsumer<T> observer)
         {
             lock (_lock)
             {
@@ -19,7 +19,7 @@
                 }
             }
 
-            return new AsyncSubscription(unRegisterAction: () =>
+            return new Subscription(unsubscribeAction: () =>
             {
                 lock (_lock)
                 {
@@ -38,12 +38,12 @@
 
         public IEnumerable<Task> Broadcast(T newEvent)
         {
-            return Observers.Select(t => t.OnNext(newEvent));
+            return Observers.Select(t => t.Consume(newEvent));
         }
         
-        public async Task BroadcastAsync(T newEvent)
+        public Task BroadcastAsync(T newEvent)
         {
-            await Task.WhenAll(Broadcast(newEvent));
+            return Task.WhenAll(Broadcast(newEvent));
         }
 
         public int GetListenerCount()

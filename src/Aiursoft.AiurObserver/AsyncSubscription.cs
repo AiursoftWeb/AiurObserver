@@ -1,17 +1,17 @@
 ﻿namespace Aiursoft.AiurObserver
 {
-    public class AsyncSubscription : ISubscription
+    public class Subscription : ISubscription
     {
-        private readonly Action _unRegisterAction;
+        private readonly Action _unsubscribeAction;
 
-        internal AsyncSubscription(Action unRegisterAction)
+        internal Subscription(Action unsubscribeAction)
         {
-            _unRegisterAction = unRegisterAction;
+            _unsubscribeAction = unsubscribeAction;
         }
 
-        public void UnRegister()
+        public void Unsubscribe()
         {
-            _unRegisterAction();
+            _unsubscribeAction();
         }
     }
 }
