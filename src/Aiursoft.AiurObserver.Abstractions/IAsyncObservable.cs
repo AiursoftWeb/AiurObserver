@@ -2,6 +2,6 @@
 {
     public interface IAsyncObservable<out T>
     {
-        ISubscription Subscribe(IAsyncObserver<T> observer);
+        ISubscription Subscribe(IConsumer<T> observer);
     }
 }

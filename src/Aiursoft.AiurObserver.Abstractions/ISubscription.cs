@@ -2,5 +2,5 @@
 
 public interface ISubscription
 {
-    public void UnRegister();
+    public void Unsubscribe();
 }

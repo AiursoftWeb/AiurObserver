@@ -62,7 +62,7 @@ public class IntegrationTests
         }
 
         Assert.AreEqual(10, totalMessages);
-        subscription.UnRegister();
+        subscription.Unsubscribe();
         
         for (var i = 0; i < 20; i++)
         {
@@ -76,10 +76,10 @@ public class IntegrationTests
     {
         var asyncObservable = new AsyncObservable<int>();
         var subscription = asyncObservable.Subscribe(_ => Task.CompletedTask);
-        subscription.UnRegister();
+        subscription.Unsubscribe();
         try
         {
-            subscription.UnRegister();
+            subscription.Unsubscribe();
             Assert.Fail();
         }
         catch (Exception)
@@ -113,7 +113,7 @@ public class IntegrationTests
         Assert.AreEqual(10, totalMessages);
         Assert.AreEqual(10, totalMessages2);
 
-        subscription2.UnRegister();
+        subscription2.Unsubscribe();
         
         for (var i = 0; i < 20; i++)
         {
@@ -131,9 +131,58 @@ public class IntegrationTests
         var sub2 = asyncObservable.Subscribe(_ => Task.CompletedTask);
 
         Assert.AreEqual(2, asyncObservable.GetListenerCount());
-        sub2.UnRegister();
+        sub2.Unsubscribe();
         Assert.AreEqual(1, asyncObservable.GetListenerCount());
-        sub1.UnRegister();
+        sub1.Unsubscribe();
         Assert.AreEqual(0, asyncObservable.GetListenerCount());
+    }
+    
+    [TestMethod]
+    public async Task TestFilteredObservable()
+    {
+        var totalMessages = 0;
+        var asyncObservable = new AsyncObservable<int>();
+        asyncObservable
+            .Filter(i => i % 2 == 0)
+            .Subscribe(_ =>
+            {
+                totalMessages++;
+                return Task.CompletedTask;
+            });
+        for (var i = 0; i < 10; i++)
+        {
+            await asyncObservable.BroadcastAsync(i);
+        }
+
+        Assert.AreEqual(5, totalMessages);
+    }
+    
+    [TestMethod]
+    public async Task TestMappedObservable()
+    {
+        var totalMessages = 0;
+        var asyncObservable = new AsyncObservable<int>();
+        var saved = asyncObservable
+            .Map(i => i * 2)
+            .Keep();
+       
+        for (var i = 0; i < 10; i++)
+        {
+            await asyncObservable.BroadcastAsync(i);
+        }
+
+        Assert.AreEqual(10, totalMessages);
+        Assert.AreEqual(18, saved.Last);
+    }
+
+    [TestMethod]
+    public async Task TestKeepMessage()
+    {
+        var asyncObservable = new AsyncObservable<int>();
+        var saved = asyncObservable.Keep();
+        
+        await asyncObservable.BroadcastAsync(2333);
+        
+        Assert.AreEqual(2333, saved.Last);
     }
 }
