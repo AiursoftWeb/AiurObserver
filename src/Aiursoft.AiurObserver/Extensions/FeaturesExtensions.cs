@@ -22,6 +22,11 @@
             return new RepeatableObservable<T>(source, times);
         }
         
+        public static CountReachObservable<T> WhenNMessages<T>(this IAsyncObservable<T> source, int count)
+        {
+            return new CountReachObservable<T>(source, count);
+        }
+        
         public static SampleObservable<T> Sample<T>(this IAsyncObservable<T> source, int every)
         {
             return new SampleObservable<T>(source, every);
@@ -30,6 +35,21 @@
         public static AggregateObservable<T> Aggregate<T>(this IAsyncObservable<T> source, int every)
         {
             return new AggregateObservable<T>(source, every);
+        }
+        
+        public static MultiThreadObservable<T> InNewThread<T>(this IAsyncObservable<T> source)
+        {
+            return new MultiThreadObservable<T>(source);
+        }
+        
+        public static LockedObservable<T> LockOneThread<T>(this IAsyncObservable<T> source)
+        {
+            return new LockedObservable<T>(source);
+        }
+        
+        public static DelayedObservable<T> Delay<T>(this MultiThreadObservable<T> source, TimeSpan delay)
+        {
+            return new DelayedObservable<T>(source, delay);
         }
     }
 }

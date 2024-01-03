@@ -7,7 +7,7 @@ public static class BasicExtensions
         return source.Subscribe(new Consumer<T>(onHappen));
     }
         
-    public static ISubscription Do<T>(this IAsyncObservable<T> source)
+    public static ISubscription Subscribe<T>(this IAsyncObservable<T> source)
     {
         return source.Subscribe(_ => Task.CompletedTask);
     }
