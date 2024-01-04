@@ -1,26 +1,26 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <Version>7.0.12</Version>
     <TargetFramework>net7.0</TargetFramework>
-    <AssemblyName>Aiursoft.AiurObserver</AssemblyName>
-    <RootNamespace>Aiursoft.AiurObserver</RootNamespace>
+    <AssemblyName>Aiursoft.AiurObserver.Command</AssemblyName>
+    <RootNamespace>Aiursoft.AiurObserver.Command</RootNamespace>
     <IsTestProject>false</IsTestProject>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Company>Aiursoft</Company>
-    <Product>AiurObserver</Product>
-    <Description>AiurObserver is an async event driven framework.</Description>
-    <PackageId>Aiursoft.AiurObserver</PackageId>
-    <PackageTags>nuget package dotnet async observer</PackageTags>
+    <Product>Command</Product>
+    <Description>Nuget package of 'Command' provided by Aiursoft</Description>
+    <PackageId>Aiursoft.AiurObserver.Command</PackageId>
+    <PackageTags>nuget package dotnet csproj dependencies</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="." />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Aiursoft.AiurObserver.Abstractions\Aiursoft.AiurObserver.Abstractions.csproj" />
+    <ProjectReference Include="..\Aiursoft.AiurObserver\Aiursoft.AiurObserver.csproj" />
   </ItemGroup>
 </Project>

@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aiursoft.AiurObserver.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aiursoft.AiurObserver.Abstractions", "src\Aiursoft.AiurObserver.Abstractions\Aiursoft.AiurObserver.Abstractions.csproj", "{683765F0-5B34-472D-9EBD-80052D1E2260}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aiursoft.AiurObserver.Command", "src\Aiursoft.AiurObserver.Command\Aiursoft.AiurObserver.Command.csproj", "{9ECC7A35-4E47-46A0-8726-0C46A1A85099}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{683765F0-5B34-472D-9EBD-80052D1E2260}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{683765F0-5B34-472D-9EBD-80052D1E2260}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{683765F0-5B34-472D-9EBD-80052D1E2260}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9ECC7A35-4E47-46A0-8726-0C46A1A85099}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ECC7A35-4E47-46A0-8726-0C46A1A85099}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ECC7A35-4E47-46A0-8726-0C46A1A85099}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ECC7A35-4E47-46A0-8726-0C46A1A85099}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,5 +45,6 @@ Global
 		{C2CD7F09-11FA-4C63-9852-9A7DD7FDEFC5} = {9387220A-BBF5-40BF-9C55-D2C0E01F4DAC}
 		{7FB995AE-4FC2-4F8E-9853-818B5FCE8BF8} = {8E71A1F4-34B5-478D-877B-301F9314EB0D}
 		{683765F0-5B34-472D-9EBD-80052D1E2260} = {9387220A-BBF5-40BF-9C55-D2C0E01F4DAC}
+		{9ECC7A35-4E47-46A0-8726-0C46A1A85099} = {9387220A-BBF5-40BF-9C55-D2C0E01F4DAC}
 	EndGlobalSection
 EndGlobal
