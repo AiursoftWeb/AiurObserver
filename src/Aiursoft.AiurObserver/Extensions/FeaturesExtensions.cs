@@ -41,6 +41,11 @@
             return new SampleObservable<T>(source, every);
         }
         
+        public static SampleDoObservable<T> SampleDo<T>(this IAsyncObservable<T> source, int every, Func<T, Task> action)
+        {
+            return new SampleDoObservable<T>(source, every, action);
+        }
+        
         public static AggregateObservable<T> Aggregate<T>(this IAsyncObservable<T> source, int every)
         {
             return new AggregateObservable<T>(source, every);
