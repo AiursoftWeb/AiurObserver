@@ -3,11 +3,11 @@
     public class AsyncObservable<T> : IAsyncObservable<T>
     {
         protected readonly List<IConsumer<T>> Observers = new();
-        private readonly object _lock = new();
+        private readonly object _observersEditLock = new();
 
         public ISubscription Subscribe(IConsumer<T> observer)
         {
-            lock (_lock)
+            lock (_observersEditLock)
             {
                 if (!Observers.Contains(observer))
                 {
@@ -21,7 +21,7 @@
 
             return new Subscription(unsubscribeAction: () =>
             {
-                lock (_lock)
+                lock (_observersEditLock)
                 {
                     if (Observers.Contains(observer))
                     {
@@ -35,10 +35,21 @@
                 }
             });
         }
-
-        public IEnumerable<Task> Broadcast(T newEvent)
+        
+        public void RemoveAllListeners()
         {
-            return Observers.Select(t => t.Consume(newEvent));
+            lock (_observersEditLock)
+            {
+                Observers.Clear();
+            }
+        }
+
+        private IEnumerable<Task> Broadcast(T newEvent)
+        {
+            lock (_observersEditLock)
+            {
+                return Observers.Select(t => t.Consume(newEvent));
+            }
         }
         
         public Task BroadcastAsync(T newEvent)
@@ -48,7 +59,10 @@
 
         public int GetListenerCount()
         {
-            return Observers.Count;
+            lock (_observersEditLock)
+            {
+                return Observers.Count;
+            }
         }
     }
 }
