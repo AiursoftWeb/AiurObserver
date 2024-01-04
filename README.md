@@ -58,7 +58,7 @@ for (var i = 0; i < 10; i++)
 }
 
 Console.WriteLine(totalMessages); // 10
-subscription.UnRegister(); // No longer receive messages.
+subscription.Unsubscribe(); // No longer receive messages.
 ```
 
 ## Why it's not IEnumerable or Stream
