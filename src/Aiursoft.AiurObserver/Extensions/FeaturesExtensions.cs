@@ -12,6 +12,15 @@
             return new MappedObservable<T1, T2>(source, mapper);
         }
 
+        public static MappedObservable<T, T> Pipe<T>(this IAsyncObservable<T> source, Action<T> action)
+        {
+            return source.Map(t => 
+            {
+                action(t);
+                return t;
+            });
+        }
+
         public static ThrottledObservable<T> Throttle<T>(this IAsyncObservable<T> source, TimeSpan throttleTime)
         {
             return new ThrottledObservable<T>(source, throttleTime);

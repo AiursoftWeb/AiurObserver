@@ -464,6 +464,7 @@ public class IntegrationTests
     [TestMethod]
     public async Task FullFeaturesTest()
     {
+        int events = 0;
         var asyncObservable = new AsyncObservable<int>();
         var stage = asyncObservable
             .Throttle(TimeSpan.FromMilliseconds(100))
@@ -471,6 +472,7 @@ public class IntegrationTests
             .Map(i => i * 100) // 0, 200, 400, 600, 800, 1000, 1200, 1400, 1600
             .Repeat(2) // 0, 0, [200], 200, 400, [400], 600, 600, [800], 800, 1000, [1000], 1200, 1200, [1400], 1400, 1600, [1600]
             .Sample(3) // 200, 400, 800, 1000, 1400, 1600
+            .Pipe(_ => events++)
             .Aggregate(3) // [200, 400, 800], [1000, 1400, 1600]
             .StageLast();
 
@@ -479,6 +481,7 @@ public class IntegrationTests
             await asyncObservable.BroadcastAsync(i);
         }
 
+        Assert.AreEqual(6, events);
         Assert.IsNotNull(stage.Stage);
         Assert.AreEqual(1000, stage.Stage[0]);
         Assert.AreEqual(1400, stage.Stage[1]);
