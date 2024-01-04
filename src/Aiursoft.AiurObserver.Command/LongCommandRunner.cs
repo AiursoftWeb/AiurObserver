@@ -49,10 +49,11 @@ public class LongCommandRunner
         process.Start();
 
         _logger.LogTrace("Starting monitor process: {ProcessName} {ProcessArgs}", bin, arg);
-        await Task.WhenAny(
-            MonitorOutputTask(),
-            MonitorErrorTask(),
-            process.WaitForExitAsync()
+        
+        // await twice, in case the task throws an exception.
+        await await Task.WhenAny(
+            // Use Task.Run here. Because calling `process.StandardError.EndOfStream` will block the thread.
+            Task.Run(MonitorOutputTask), Task.Run(MonitorErrorTask), process.WaitForExitAsync()
         );
         _logger.LogWarning("The monitor WhenAny task has exited: {ProcessName} {ProcessArgs}", bin, arg);
 
