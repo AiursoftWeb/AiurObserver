@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace Aiursoft.AiurObserver.Command;
 
@@ -7,6 +8,13 @@ namespace Aiursoft.AiurObserver.Command;
 /// </summary>
 public class LongCommandRunner
 {
+    private readonly ILogger<LongCommandRunner> _logger;
+
+    public LongCommandRunner(ILogger<LongCommandRunner> logger)
+    {
+        _logger = logger;
+    }
+    
     public AsyncObservable<string> Output { get; } = new();
     
     public AsyncObservable<string> Error { get; } = new();
@@ -40,11 +48,13 @@ public class LongCommandRunner
         };
         process.Start();
 
+        _logger.LogTrace("Starting monitor process: {ProcessName} {ProcessArgs}", bin, arg);
         await Task.WhenAny(
             MonitorOutputTask(),
             MonitorErrorTask(),
             process.WaitForExitAsync()
         );
+        _logger.LogWarning("The monitor WhenAny task has exited: {ProcessName} {ProcessArgs}", bin, arg);
 
         // In case the program exit:
         Output.RemoveAllListeners();
