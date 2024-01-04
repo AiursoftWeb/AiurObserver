@@ -2,5 +2,5 @@
 
 public interface ISubscription
 {
-    public void Unsubscribe();
+    public void Unsubscribe(bool throwIfAlreadyUnsubscribed = false);
 }

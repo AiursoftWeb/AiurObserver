@@ -9,9 +9,19 @@
             _unsubscribeAction = unsubscribeAction;
         }
 
-        public void Unsubscribe()
+        public void Unsubscribe(bool throwIfAlreadyUnsubscribed = false)
         {
-            _unsubscribeAction();
+            try
+            {
+                _unsubscribeAction();
+            }
+            catch
+            {
+                if (throwIfAlreadyUnsubscribed)
+                {
+                    throw;
+                }
+            }
         }
     }
 }
