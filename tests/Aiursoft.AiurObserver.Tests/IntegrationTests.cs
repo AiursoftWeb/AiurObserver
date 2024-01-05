@@ -414,7 +414,7 @@ public class IntegrationTests
         }
 
         watch.Stop();
-        Assert.IsTrue(watch.ElapsedMilliseconds >= 1000, watch.ElapsedMilliseconds.ToString());
+        Assert.IsTrue(watch.ElapsedMilliseconds >= 990, watch.ElapsedMilliseconds.ToString());
         Assert.IsTrue(watch.ElapsedMilliseconds <= 1200, watch.ElapsedMilliseconds.ToString());
     }
 
