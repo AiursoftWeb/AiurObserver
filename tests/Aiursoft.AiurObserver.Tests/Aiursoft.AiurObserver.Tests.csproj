@@ -20,6 +20,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Aiursoft.AiurObserver.Extensions\Aiursoft.AiurObserver.Extensions.csproj" />
-    <ProjectReference Include="..\..\src\Aiursoft.AiurObserver\Aiursoft.AiurObserver.csproj" />
   </ItemGroup>
 </Project>
