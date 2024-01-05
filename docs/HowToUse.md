@@ -2,6 +2,52 @@
 
 AiurObserver is a powerful C# development tool that allows you to construct an object that can be observed asynchronously. It comes with a set of operators that make it easy for you to manipulate and process data streams.
 
+## Difference with IEnumerable
+
+IEnumerable follows:
+
+* Data source
+* Query
+* Do Next
+
+```csharp
+// 1. Data source
+var list = new List<int> { 1, 2, 3, 4, 5 };
+
+// 2. Query
+var query = list.Where(t => t >= 1);
+
+var data = query.ToList();
+foreach (var item in data)
+{
+    // 3. Do Next
+}
+```
+
+However, AiurObserver follows:
+
+* Query
+* Do Next
+* Data source
+
+```csharp
+// 1. Query
+var asyncObservable = new AsyncObservable<int>();
+var query = asyncObservable.Filter(t => t >= 1);
+
+var subscription = query.Subscribe(t => 
+{
+    // 2. Do Next
+});
+
+// 3. Data source
+await asyncObservable.BroadcastAsync(1);
+await asyncObservable.BroadcastAsync(2);
+await asyncObservable.BroadcastAsync(3);
+```
+
+So it works asynchronously. You can broadcast data to the observable at any time. And the consumer you defined will be triggered at any time.
+
 ## Basic Usage
 
 ```csharp
