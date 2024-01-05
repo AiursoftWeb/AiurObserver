@@ -241,7 +241,7 @@ public class IntegrationTests
     }
 
     [TestMethod]
-    public async Task TestCountReachObservable()
+    public async Task TestWhenMessagesObservable()
     {
         var asyncObservable = new AsyncObservable<int>();
         var counter = asyncObservable
@@ -298,6 +298,21 @@ public class IntegrationTests
 
         Assert.AreEqual(10, counter.Count);
         Assert.AreEqual(3, myCounter);
+    }
+    
+    [TestMethod]
+    public void TestInvalidSampleDoObservable()
+    {
+        var asyncObservable = new AsyncObservable<int>();
+        try
+        {
+            asyncObservable.SampleDo(0, _ => Task.CompletedTask);
+            Assert.Fail();
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
     }
 
     [TestMethod]
@@ -476,15 +491,17 @@ public class IntegrationTests
     }
 
     [TestMethod]
-    public async Task TestStageMessage()
+    public async Task TestStageLastMessage()
     {
         var asyncObservable = new AsyncObservable<int>();
         var stage = asyncObservable.StageLast();
+        Assert.IsFalse(stage.IsStaged);
 
         await asyncObservable.BroadcastAsync(33344);
         await asyncObservable.BroadcastAsync(44455);
         await asyncObservable.BroadcastAsync(2333);
 
+        Assert.IsTrue(stage.IsStaged);
         Assert.AreEqual(2333, stage.Stage);
     }
     
@@ -536,12 +553,14 @@ public class IntegrationTests
     {
         var asyncObservable = new AsyncObservable<int>();
         var first = asyncObservable.StageFirst();
+        Assert.IsFalse(first.IsStaged);
 
         await asyncObservable.BroadcastAsync(2333);
         await asyncObservable.BroadcastAsync(33344);
         await asyncObservable.BroadcastAsync(44455);
 
         Assert.AreEqual(2333, first.Stage);
+        Assert.IsTrue(first.IsStaged);
     }
 
     [TestMethod]
