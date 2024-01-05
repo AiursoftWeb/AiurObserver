@@ -277,6 +277,28 @@ public class IntegrationTests
         Assert.AreEqual(finalStaged, stage.Stage);
         Assert.AreEqual(consumedCount, counter.Count);
     }
+    
+    [TestMethod]
+    public async Task TestSampleDoObservable()
+    {
+        var myCounter = 0;
+        var asyncObservable = new AsyncObservable<int>();
+        var counter = asyncObservable
+            .SampleDo(3, _ =>
+            {
+                myCounter++;
+                return Task.CompletedTask;
+            })
+            .Counter();
+
+        for (var i = 0; i < 10; i++)
+        {
+            await asyncObservable.BroadcastAsync(i);
+        }
+
+        Assert.AreEqual(10, counter.Count);
+        Assert.AreEqual(3, myCounter);
+    }
 
     [TestMethod]
     public void InvalidSampleObservable()
@@ -311,6 +333,19 @@ public class IntegrationTests
         Assert.AreEqual(7, aggregated.Stage[1]);
         Assert.AreEqual(8, aggregated.Stage[2]);
     }
+    
+    [TestMethod]
+    public async Task TestSplitObservable()
+    {
+        var asyncObservable = new AsyncObservable<int[]>();
+        var counter = asyncObservable
+            .Split()
+            .Counter();
+
+        await asyncObservable.BroadcastAsync(new[] { 1, 2, 3 });
+        await asyncObservable.BroadcastAsync(new[] { 1, 2, 3 });
+        Assert.AreEqual(6, counter.Count);
+    }
 
     [TestMethod]
     public void TestInvalidAggregateObservable()
@@ -325,6 +360,24 @@ public class IntegrationTests
         {
             // ignored
         }
+    }
+    
+    [TestMethod]
+    public async Task TestAggregateThenSplitObservable()
+    {
+        var asyncObservable = new AsyncObservable<int>();
+        var counter = asyncObservable
+            .Aggregate(3)
+            .Split()
+            .Counter();
+
+        await asyncObservable.BroadcastAsync(1);
+        await asyncObservable.BroadcastAsync(2);
+        await asyncObservable.BroadcastAsync(3);
+        await asyncObservable.BroadcastAsync(4);
+        await asyncObservable.BroadcastAsync(5);
+        await asyncObservable.BroadcastAsync(6);
+        Assert.AreEqual(6, counter.Count);
     }
 
     [TestMethod]
@@ -433,6 +486,49 @@ public class IntegrationTests
         await asyncObservable.BroadcastAsync(2333);
 
         Assert.AreEqual(2333, stage.Stage);
+    }
+    
+    [TestMethod]
+    public async Task TestSumMessage()
+    {
+        var asyncObservable = new AsyncObservable<double>();
+        var sum = asyncObservable.Adder();
+
+        await asyncObservable.BroadcastAsync(2333);
+        await asyncObservable.BroadcastAsync(33344);
+        await asyncObservable.BroadcastAsync(44455);
+
+        Assert.AreEqual(80132, sum.Sum);
+    }
+    [TestMethod]
+    public async Task TestAverageRecent()
+    {
+        var asyncObservable = new AsyncObservable<int>();
+        var averageRecent = asyncObservable.AverageRecent(3);
+        var average = asyncObservable.Average();
+        
+        await asyncObservable.BroadcastAsync(1);
+
+        var (total, count) = averageRecent.Average(); 
+        var (totalA, countA) = average.Average();
+        Assert.AreEqual(1, total / count);
+        Assert.AreEqual(1, totalA / countA);
+
+        await asyncObservable.BroadcastAsync(2);
+        await asyncObservable.BroadcastAsync(3);
+        
+        (total, count) = averageRecent.Average(); 
+        (totalA, countA) = average.Average();
+        Assert.AreEqual(2, total / count);
+        Assert.AreEqual(2, totalA / countA);
+
+        await asyncObservable.BroadcastAsync(3);
+        await asyncObservable.BroadcastAsync(3);
+
+        (total, count) = averageRecent.Average(); 
+        (totalA, countA) = average.Average();
+        Assert.AreEqual(3, total / count);
+        Assert.AreEqual(2.4, (double)totalA / countA);
     }
 
     [TestMethod]

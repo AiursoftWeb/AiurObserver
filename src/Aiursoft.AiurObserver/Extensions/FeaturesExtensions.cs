@@ -51,6 +51,11 @@
             return new AggregateObservable<T>(source, every);
         }
         
+        public static SplitObservable<T> Split<T>(this IAsyncObservable<T[]> source)
+        {
+            return new SplitObservable<T>(source);
+        }
+        
         public static MultiThreadObservable<T> InNewThread<T>(this IAsyncObservable<T> source)
         {
             return new MultiThreadObservable<T>(source);
