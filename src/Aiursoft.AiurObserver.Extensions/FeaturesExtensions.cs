@@ -31,11 +31,6 @@
             return new RepeatableObservable<T>(source, times);
         }
         
-        public static CountReachObservable<T> WhenNMessages<T>(this IAsyncObservable<T> source, int count)
-        {
-            return new CountReachObservable<T>(source, count);
-        }
-        
         public static SampleObservable<T> Sample<T>(this IAsyncObservable<T> source, int every)
         {
             return new SampleObservable<T>(source, every);
@@ -51,7 +46,7 @@
             return new AggregateObservable<T>(source, every);
         }
         
-        public static SplitObservable<T> Split<T>(this IAsyncObservable<T[]> source)
+        public static SplitObservable<T> ForEach<T>(this IAsyncObservable<T[]> source)
         {
             return new SplitObservable<T>(source);
         }

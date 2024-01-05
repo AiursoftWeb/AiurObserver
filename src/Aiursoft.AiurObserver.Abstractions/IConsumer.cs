@@ -2,6 +2,6 @@
 {
     public interface IConsumer<in T>
     {
-        public Func<T, Task> Consume { get; }
+        public Task Consume(T value);
     }
 }

@@ -1,12 +1,17 @@
 ﻿namespace Aiursoft.AiurObserver
 {
-    internal class Consumer<T> : IConsumer<T>
+    public class Consumer<T> : IConsumer<T>
     {
-        public Func<T, Task> Consume { get; }
+        private readonly Func<T, Task> _innerConsume;
 
-        internal Consumer(Func<T, Task> onNext)
+        public Consumer(Func<T, Task> onNext)
         {
-            Consume = onNext;
+            _innerConsume = onNext;
+        }
+
+        public Task Consume(T value)
+        {
+            return _innerConsume(value);
         }
     }
 }

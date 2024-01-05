@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <Version>7.0.12</Version>
+    <Version>7.0.18</Version>
     <TargetFramework>net7.0</TargetFramework>
     <AssemblyName>Aiursoft.AiurObserver.Abstractions</AssemblyName>
-    <RootNamespace>Aiursoft.AiurObserver.Abstractions</RootNamespace>
+    <RootNamespace>Aiursoft.AiurObserver</RootNamespace>
     <IsTestProject>false</IsTestProject>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>

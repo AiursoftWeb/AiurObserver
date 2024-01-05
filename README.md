@@ -69,6 +69,10 @@ While AiurObserver might seem similar to IEnumerable or Stream, it's not a subst
 
 - **Stream**: Stream is designed for byte data and is often used for reading and writing to a file or network stream. AiurObserver, on the other hand, is designed for object data and is more suitable for scenarios where data is produced and consumed asynchronously.
 
+## Read document
+
+Please click [here](./docs/HowToUse.md) to learn how to use it.
+
 ## How to contribute
 
 There are many ways to contribute to the project: logging bugs, submitting pull requests, reporting issues, and creating suggestions.
