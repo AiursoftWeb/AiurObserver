@@ -141,6 +141,27 @@ public class IntegrationTests
     }
 
     [TestMethod]
+    public async Task RadioTest()
+    {
+        var asyncObservable = new AsyncObservable<int>();
+        var radio = new MessageRadio<int>();
+        asyncObservable.Subscribe(radio);
+        
+        var stage1 = new MessageStageLast<int>();
+        var stage2 = new MessageStageLast<int>();
+        var stage3 = new MessageStageLast<int>();
+        radio.Subscribe(stage1);
+        radio.Subscribe(stage2);
+        radio.Subscribe(stage3);
+        
+        await asyncObservable.BroadcastAsync(2333);
+        
+        Assert.AreEqual(2333, stage1.Stage);
+        Assert.AreEqual(2333, stage2.Stage);
+        Assert.AreEqual(2333, stage3.Stage);
+    }
+
+    [TestMethod]
     public async Task TestFilteredObservable()
     {
         var subscribedMessages = 0;
