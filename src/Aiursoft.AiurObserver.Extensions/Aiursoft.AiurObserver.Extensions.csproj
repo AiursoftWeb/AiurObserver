@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <Version>7.0.18</Version>
+    <TargetFramework>net7.0</TargetFramework>
+    <AssemblyName>Aiursoft.AiurObserver.Extensions</AssemblyName>
+    <RootNamespace>Aiursoft.AiurObserver</RootNamespace>
+    <IsTestProject>false</IsTestProject>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Company>Aiursoft</Company>
+    <Product>AiurObserver</Product>
+    <Description>AiurObserver is an async event driven framework.</Description>
+    <PackageId>Aiursoft.AiurObserver.Extensions</PackageId>
+    <PackageTags>nuget package dotnet async observer</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="." />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Aiursoft.AiurObserver\Aiursoft.AiurObserver.csproj" />
+  </ItemGroup>
+</Project>
