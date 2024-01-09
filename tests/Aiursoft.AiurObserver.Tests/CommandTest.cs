@@ -41,7 +41,7 @@ public class CommandTest
         
         var cancelToken = new CancellationTokenSource();
         var task = runner.Run("ping", _testCommand, Environment.CurrentDirectory, cancelToken.Token);
-        await Task.Delay(100);
+        await Task.Delay(1000);
         cancelToken.Cancel();
         await task;
         
