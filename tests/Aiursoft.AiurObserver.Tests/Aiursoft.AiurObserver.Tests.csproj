@@ -20,5 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Aiursoft.AiurObserver.Extensions\Aiursoft.AiurObserver.Extensions.csproj" />
+    <ProjectReference Include="..\..\src\Aiursoft.AiurObserver.Stream\Aiursoft.AiurObserver.Stream.csproj" />
   </ItemGroup>
 </Project>
