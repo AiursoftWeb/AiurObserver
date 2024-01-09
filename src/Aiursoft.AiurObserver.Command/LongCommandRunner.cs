@@ -19,17 +19,11 @@ public class LongCommandRunner
     
     public AsyncObservable<string> Error { get; } = new();
     
-    private bool ShouldStop { get; set; }
-    
-    public void Stop()
-    {
-        ShouldStop = true;
-    }
-    
     public async Task Run(
         string bin, 
         string arg, 
-        string path)
+        string path,
+        CancellationToken token = default)
     {
         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
         var process = new Process
@@ -66,25 +60,32 @@ public class LongCommandRunner
             process.Kill();
         }
 
-        if (!ShouldStop)
-        {
-            throw new InvalidOperationException("The process has exited, while the monitor is still running!");
-        }
-
         return;
 
         async Task MonitorOutputTask()
         {
-            while (!process.StandardOutput.EndOfStream && !ShouldStop)
+            while (!process.StandardOutput.EndOfStream)
             {
+                if (token.IsCancellationRequested)
+                {
+                    process.Kill();
+                    return;
+                }
+                
                 await Output.BroadcastAsync(await process.StandardOutput.ReadLineAsync() ?? string.Empty);
             }
         }
         
         async Task MonitorErrorTask()
         {
-            while (!process.StandardError.EndOfStream && !ShouldStop)
+            while (!process.StandardError.EndOfStream)
             {
+                if (token.IsCancellationRequested)
+                {
+                    process.Kill();
+                    return;
+                }
+                
                 await Error.BroadcastAsync(await process.StandardError.ReadLineAsync() ?? string.Empty);
             }
         }

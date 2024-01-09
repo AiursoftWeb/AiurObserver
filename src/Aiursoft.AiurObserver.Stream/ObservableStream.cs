@@ -11,12 +11,12 @@ public class ObservableStream : AsyncObservable<string>
         _stream = stream;
     }
 
-    public async Task ReadToEndAsync()
+    public async Task ReadToEndAsync(CancellationToken token = default)
     {
         var reader = new StreamReader(_stream, Encoding.UTF8);
         while (true)
         {
-            if (reader.EndOfStream)
+            if (reader.EndOfStream || token.IsCancellationRequested)
             {
                 break;
             }
