@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using Aiursoft.AiurObserver.DefaultConsumers;
+using Aiursoft.AiurObserver.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Aiursoft.AiurObserver.Tests;

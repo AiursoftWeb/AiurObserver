@@ -1,4 +1,4 @@
-namespace Aiursoft.AiurObserver;
+namespace Aiursoft.AiurObserver.Features;
 
 public class SampleDoObservable<T> : IAsyncObservable<T>
 {

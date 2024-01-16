@@ -1,4 +1,4 @@
-﻿namespace Aiursoft.AiurObserver;
+﻿namespace Aiursoft.AiurObserver.Extensions;
 
 public static class BasicExtensions
 {

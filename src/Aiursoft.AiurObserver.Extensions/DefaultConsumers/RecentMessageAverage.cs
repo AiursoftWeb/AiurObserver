@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Aiursoft.AiurObserver;
+namespace Aiursoft.AiurObserver.DefaultConsumers;
 
 public class RecentMessageAverage<T> 
     : AsyncObservable<(T, int)>, IConsumer<T>

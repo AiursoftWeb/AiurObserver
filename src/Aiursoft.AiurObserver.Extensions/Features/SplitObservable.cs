@@ -1,4 +1,4 @@
-using Aiursoft.AiurObserver;
+namespace Aiursoft.AiurObserver.Features;
 
 public class SplitObservable<T> : IAsyncObservable<T>
 {

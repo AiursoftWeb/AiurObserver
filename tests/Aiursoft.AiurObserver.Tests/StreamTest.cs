@@ -1,3 +1,4 @@
+using Aiursoft.AiurObserver.DefaultConsumers;
 using Aiursoft.AiurObserver.Stream;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

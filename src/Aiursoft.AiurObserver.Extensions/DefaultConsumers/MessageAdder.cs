@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Aiursoft.AiurObserver;
+namespace Aiursoft.AiurObserver.DefaultConsumers;
 
 public class MessageAdder<T> : AsyncObservable<T>, IConsumer<T> where T : struct, INumber<T>
 {

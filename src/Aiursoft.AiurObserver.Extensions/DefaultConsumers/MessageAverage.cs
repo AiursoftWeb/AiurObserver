@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Aiursoft.AiurObserver;
+namespace Aiursoft.AiurObserver.DefaultConsumers;
 
 public class MessageAverage<T> : AsyncObservable<(T, int)>, IConsumer<T>
     where T : struct, INumber<T>

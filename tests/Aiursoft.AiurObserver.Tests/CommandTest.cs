@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using Aiursoft.AiurObserver.Command;
+using Aiursoft.AiurObserver.DefaultConsumers;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

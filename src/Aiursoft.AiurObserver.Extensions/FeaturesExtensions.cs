@@ -1,4 +1,6 @@
-﻿namespace Aiursoft.AiurObserver
+﻿using Aiursoft.AiurObserver.Features;
+
+namespace Aiursoft.AiurObserver
 {
     public static class FeaturesExtensions
     {

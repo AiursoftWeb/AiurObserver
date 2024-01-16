@@ -1,4 +1,4 @@
-﻿namespace Aiursoft.AiurObserver;
+﻿namespace Aiursoft.AiurObserver.DefaultConsumers;
 
 public class MessageStageLast<T> : AsyncObservable<T>, IConsumer<T>
 {

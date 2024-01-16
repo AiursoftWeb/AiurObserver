@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Aiursoft.AiurObserver;
+namespace Aiursoft.AiurObserver.Features;
 
 public class ThrottledObservable<T> : IAsyncObservable<T>
 {
