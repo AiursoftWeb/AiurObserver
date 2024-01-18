@@ -1,9 +1,9 @@
 ﻿namespace Aiursoft.AiurObserver.Clock;
 
-public class ClockObservable : AsyncObservable<DateTime>
+public class ObservableClock : AsyncObservable<DateTime>
 {
     private readonly TimeSpan _interval;
-    public ClockObservable(TimeSpan interval)
+    public ObservableClock(TimeSpan interval)
     {
         _interval = interval;
     }
@@ -16,7 +16,7 @@ public class ClockObservable : AsyncObservable<DateTime>
             {
                 break;
             }
-            await Task.Delay(_interval);
+            await Task.Delay(_interval, cancellationToken);
             await BroadcastAsync(DateTime.Now);
         }
     }
