@@ -21,7 +21,7 @@ public class ObservableStream : AsyncObservable<string>
                 break;
             }
             
-            var line = await reader.ReadLineAsync();
+            var line = await reader.ReadLineAsync(token);
             if (line != null)
             {
                 await BroadcastAsync(line);

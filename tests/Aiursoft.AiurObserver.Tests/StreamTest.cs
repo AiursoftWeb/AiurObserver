@@ -16,11 +16,8 @@ public class StreamTest
         await File.WriteAllLinesAsync(testFile, Enumerable.Range(0, 10).Select(t => t.ToString()));
         
         // Open the file for reading.
-        var stream = File.OpenRead(testFile);
+        var observableStream = File.OpenRead(testFile).ToObservableStream();
         
-        // Create an observable stream.
-        var observableStream = new ObservableStream(stream);
-
         // Create a counter to count the number of lines.
         var counter = new MessageCounter<string>();
         var stage = new MessageStageLast<string>();

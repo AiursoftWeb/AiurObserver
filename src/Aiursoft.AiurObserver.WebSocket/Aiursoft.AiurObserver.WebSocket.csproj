@@ -1,29 +1,24 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <Version>7.0.21</Version>
     <TargetFramework>net7.0</TargetFramework>
-    <AssemblyName>Aiursoft.AiurObserver.Stream</AssemblyName>
-    <RootNamespace>Aiursoft.AiurObserver.Stream</RootNamespace>
+    <AssemblyName>Aiursoft.AiurObserver.WebSocket</AssemblyName>
+    <RootNamespace>Aiursoft.AiurObserver.WebSocket</RootNamespace>
     <IsTestProject>false</IsTestProject>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Company>Aiursoft</Company>
-    <Product>Stream</Product>
-    <Description>Nuget package of 'Stream' provided by Aiursoft</Description>
-    <PackageId>Aiursoft.AiurObserver.Stream</PackageId>
+    <Product>WebSocket</Product>
+    <Description>Nuget package of 'WebSocket' provided by Aiursoft</Description>
+    <PackageId>Aiursoft.AiurObserver.WebSocket</PackageId>
     <PackageTags>nuget package dotnet csproj dependencies</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\README.md" Pack="true" PackagePath="." />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Aiursoft.AiurObserver\Aiursoft.AiurObserver.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="." />
   </ItemGroup>
 </Project>

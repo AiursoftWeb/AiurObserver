@@ -9,6 +9,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Aiursoft.CsTools" Version="7.0.11" />
     <PackageReference Include="coverlet.collector" Version="6.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -20,8 +21,10 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Aiursoft.AiurObserver.Clock\Aiursoft.AiurObserver.Clock.csproj" />
     <ProjectReference Include="..\..\src\Aiursoft.AiurObserver.Command\Aiursoft.AiurObserver.Command.csproj" />
     <ProjectReference Include="..\..\src\Aiursoft.AiurObserver.Extensions\Aiursoft.AiurObserver.Extensions.csproj" />
     <ProjectReference Include="..\..\src\Aiursoft.AiurObserver.Stream\Aiursoft.AiurObserver.Stream.csproj" />
+    <ProjectReference Include="..\..\src\Aiursoft.AiurObserver.WebSocket.Server\Aiursoft.AiurObserver.WebSocket.Server.csproj" />
   </ItemGroup>
 </Project>

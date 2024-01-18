@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <Version>7.0.19</Version>
+    <Version>7.0.21</Version>
     <TargetFramework>net7.0</TargetFramework>
     <AssemblyName>Aiursoft.AiurObserver</AssemblyName>
     <RootNamespace>Aiursoft.AiurObserver</RootNamespace>
