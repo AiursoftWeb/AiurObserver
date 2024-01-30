@@ -47,7 +47,7 @@ public class LongCommandRunner
         // await twice, in case the task throws an exception.
         await await Task.WhenAny(
             // Use Task.Run here. Because calling `process.StandardError.EndOfStream` will block the thread.
-            Task.Run(MonitorOutputTask), Task.Run(MonitorErrorTask), process.WaitForExitAsync()
+            Task.Run(MonitorOutputTask, token), Task.Run(MonitorErrorTask, token), process.WaitForExitAsync(token)
         );
         _logger.LogWarning("The monitor WhenAny task has exited: {ProcessName} {ProcessArgs}", bin, arg);
 
@@ -72,7 +72,7 @@ public class LongCommandRunner
                     return;
                 }
                 
-                await Output.BroadcastAsync(await process.StandardOutput.ReadLineAsync() ?? string.Empty);
+                await Output.BroadcastAsync(await process.StandardOutput.ReadLineAsync(token) ?? string.Empty);
             }
         }
         
@@ -86,7 +86,7 @@ public class LongCommandRunner
                     return;
                 }
                 
-                await Error.BroadcastAsync(await process.StandardError.ReadLineAsync() ?? string.Empty);
+                await Error.BroadcastAsync(await process.StandardError.ReadLineAsync(token) ?? string.Empty);
             }
         }
     }
