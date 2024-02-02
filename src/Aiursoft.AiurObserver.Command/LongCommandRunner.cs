@@ -10,15 +10,40 @@ public class LongCommandRunner
 {
     private readonly ILogger<LongCommandRunner> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the LongCommandRunner class.
+    /// </summary>
+    /// <param name="logger">The logger to be used for logging.</param>
     public LongCommandRunner(ILogger<LongCommandRunner> logger)
     {
         _logger = logger;
     }
-    
+
+    /// <summary>
+    /// Represents an asynchronous observable stream of string outputs.
+    /// </summary>
     public AsyncObservable<string> Output { get; } = new();
-    
+
+    /// <summary>
+    /// Gets the async observable for error messages.
+    /// </summary>
+    /// <remarks>
+    /// The Error property provides an async observable that emits error messages of type <see cref="string"/>.
+    /// Developers can subscribe to this property to receive error messages asynchronously.
+    /// </remarks>
+    /// <value>
+    /// An async observable that emits error messages of type <see cref="string"/>.
+    /// </value>
     public AsyncObservable<string> Error { get; } = new();
-    
+
+    /// <summary>
+    /// Asynchronously executes a binary file with arguments in a specified path and monitors its output and error streams.
+    /// </summary>
+    /// <param name="bin">The path to the binary file.</param>
+    /// <param name="arg">The arguments to pass to the binary file.</param>
+    /// <param name="path">The path where the output and error streams will be monitored.</param>
+    /// <param name="token">A <see cref="CancellationToken"/> to cancel the operation (optional).</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous execution.</returns>
     public async Task Run(
         string bin, 
         string arg, 
