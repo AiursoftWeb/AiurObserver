@@ -44,7 +44,14 @@ public class CommandTest
         var task = runner.Run("ping", _testCommand, Environment.CurrentDirectory, cancelToken.Token);
         await Task.Delay(2000, cancelToken.Token);
         cancelToken.Cancel();
-        await task;
+        try
+        {
+            await task;
+        }
+        catch (Exception e)
+        {
+            Assert.IsTrue(e is TaskCanceledException);
+        }
         
         Assert.IsTrue(counter.Count > 0);
         Assert.IsTrue(stage.Stage != null);
