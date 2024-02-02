@@ -10,7 +10,7 @@ namespace Aiursoft.AiurObserver.Tests;
 public class CommandTest
 {
     private readonly string _testCommand =
-        RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "-n 2 baidu.com" : "-c 2 baidu.com";
+        RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "-n 2 www.aiursoft.cn" : "-c 2 www.aiursoft.cn";
 
     [TestMethod]
     public async Task TestLongRunningCommand()
@@ -42,7 +42,7 @@ public class CommandTest
         
         var cancelToken = new CancellationTokenSource();
         var task = runner.Run("ping", _testCommand, Environment.CurrentDirectory, cancelToken.Token);
-        await Task.Delay(15000, cancelToken.Token);
+        await Task.Delay(5000, cancelToken.Token);
         cancelToken.Cancel();
         try
         {
