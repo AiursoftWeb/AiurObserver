@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <Version>7.0.23</Version>
+    <Version>7.0.25</Version>
     <TargetFramework>net7.0</TargetFramework>
     <AssemblyName>Aiursoft.AiurObserver.WebSocket.Server</AssemblyName>
     <RootNamespace>Aiursoft.AiurObserver.WebSocket.Server</RootNamespace>
