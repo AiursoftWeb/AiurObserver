@@ -1,6 +1,9 @@
 ﻿namespace Aiursoft.AiurObserver
 {
-    public class Subscription : ISubscription
+    /// <summary>
+    /// Represents a subscription to an event or observable sequence that can be unsubscribed.
+    /// </summary>
+    public class Subscription : ISubscription, IDisposable
     {
         private readonly Action _unsubscribeAction;
 
@@ -22,6 +25,11 @@
                     throw;
                 }
             }
+        }
+        
+        public void Dispose()
+        {
+            Unsubscribe();
         }
     }
 }
