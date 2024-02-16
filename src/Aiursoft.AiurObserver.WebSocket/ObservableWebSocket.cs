@@ -93,7 +93,11 @@ public class ObservableWebSocket : AsyncObservable<string>, IConsumer<string>
         }
 
         _dropped = true;
-        Observers.Clear();
+        lock (ObserversEditLock)
+        {
+            Observers.Clear();
+        }
+
         return Task.CompletedTask;
     }
 
