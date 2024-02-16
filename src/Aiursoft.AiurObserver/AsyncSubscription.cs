@@ -12,22 +12,18 @@
             _unsubscribeAction = unsubscribeAction;
         }
 
-        public void Unsubscribe(bool throwIfAlreadyUnsubscribed = false)
+        /// <summary>
+        /// Unsubscribes from an action.
+        /// </summary>
+        public void Unsubscribe()
         {
-            try
-            {
-                _unsubscribeAction();
-            }
-            catch
-            {
-                if (throwIfAlreadyUnsubscribed)
-                {
-                    throw;
-                }
-            }
+            _unsubscribeAction();
         }
-        
-        public void Dispose()
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        void IDisposable.Dispose()
         {
             Unsubscribe();
         }

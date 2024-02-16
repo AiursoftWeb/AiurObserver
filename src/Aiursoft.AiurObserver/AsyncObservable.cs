@@ -35,10 +35,6 @@
                         var removed = Observers.Remove(observer);
                         if (!removed) throw new Exception("Failed to remove observer.");
                     }
-                    else
-                    {
-                        throw new Exception("This observer is not subscribed!");
-                    }
                 }
             });
         }
