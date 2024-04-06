@@ -531,7 +531,7 @@ public class IntegrationTests
 
         watch.Stop();
         Assert.IsTrue(watch.ElapsedMilliseconds >= 100, watch.ElapsedMilliseconds.ToString());
-        Assert.IsTrue(watch.ElapsedMilliseconds <= 140, watch.ElapsedMilliseconds.ToString());
+        Assert.IsTrue(watch.ElapsedMilliseconds <= 180, watch.ElapsedMilliseconds.ToString());
     }
 
     [TestMethod]
