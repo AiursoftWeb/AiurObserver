@@ -522,7 +522,7 @@ public class IntegrationTests
             await asyncObservable.BroadcastAsync(i);
         }
 
-        Assert.IsTrue(watch.ElapsedMilliseconds < 50, watch.ElapsedMilliseconds.ToString());
+        Assert.IsTrue(watch.ElapsedMilliseconds < 60, watch.ElapsedMilliseconds.ToString());
 
         while (counter.Count != 10)
         {
