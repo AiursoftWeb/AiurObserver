@@ -7,7 +7,7 @@
     {
         private readonly Action _unsubscribeAction;
 
-        internal Subscription(Action unsubscribeAction)
+        public Subscription(Action unsubscribeAction)
         {
             _unsubscribeAction = unsubscribeAction;
         }
