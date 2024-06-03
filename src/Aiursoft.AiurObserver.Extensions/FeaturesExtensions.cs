@@ -13,6 +13,11 @@ namespace Aiursoft.AiurObserver
         {
             return new MappedObservable<T1, T2>(source, mapper);
         }
+        
+        public static AsyncMappedObservable<T1, T2> MapAsync<T1, T2>(this IAsyncObservable<T1> source, Func<T1, Task<T2>> mapper)
+        {
+            return new AsyncMappedObservable<T1, T2>(source, mapper);
+        }
 
         public static MappedObservable<T, T> Pipe<T>(this IAsyncObservable<T> source, Action<T> action)
         {
@@ -66,6 +71,11 @@ namespace Aiursoft.AiurObserver
         public static DelayedObservable<T> Delay<T>(this MultiThreadObservable<T> source, TimeSpan delay)
         {
             return new DelayedObservable<T>(source, delay);
+        }
+        
+        public static BufferObservable<T> WithBuffer<T>(this IAsyncObservable<T> source, int maxBufferLength)
+        {
+            return new BufferObservable<T>(source, maxBufferLength);
         }
     }
 }

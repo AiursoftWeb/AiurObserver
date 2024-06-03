@@ -148,16 +148,16 @@ public class IntegrationTests
         var asyncObservable = new AsyncObservable<int>();
         var radio = new MessageRadio<int>();
         asyncObservable.Subscribe(radio);
-        
+
         var stage1 = new MessageStageLast<int>();
         var stage2 = new MessageStageLast<int>();
         var stage3 = new MessageStageLast<int>();
         radio.Subscribe(stage1);
         radio.Subscribe(stage2);
         radio.Subscribe(stage3);
-        
+
         await asyncObservable.BroadcastAsync(2333);
-        
+
         Assert.AreEqual(2333, stage1.Stage);
         Assert.AreEqual(2333, stage2.Stage);
         Assert.AreEqual(2333, stage3.Stage);
@@ -207,6 +207,27 @@ public class IntegrationTests
     }
 
     [TestMethod]
+    public async Task TestAsyncMappedObservable()
+    {
+        var asyncObservable = new AsyncObservable<int>();
+        var saved = new MessageStageLast<int>();
+        asyncObservable
+            .MapAsync(async i =>
+            {
+                await Task.Delay(10);
+                return i * 2;
+            })
+            .Subscribe(saved);
+
+        for (var i = 0; i < 10; i++)
+        {
+            await asyncObservable.BroadcastAsync(i);
+        }
+
+        Assert.AreEqual(18, saved.Stage);
+    }
+
+    [TestMethod]
     public async Task TestThrottledObservable()
     {
         var asyncObservable = new AsyncObservable<int>();
@@ -239,7 +260,7 @@ public class IntegrationTests
     public async Task TestRepeatableObservable()
     {
         var asyncObservable = new AsyncObservable<int>();
-        var counter = new MessageCounter<int>(); 
+        var counter = new MessageCounter<int>();
         asyncObservable
             .Repeat(3)
             .Subscribe(counter);
@@ -256,8 +277,8 @@ public class IntegrationTests
     public async Task TestRepeatableObservable2()
     {
         var asyncObservable = new AsyncObservable<int>();
-        
-        var stage = new MessageStageLast<int>(); 
+
+        var stage = new MessageStageLast<int>();
         asyncObservable
             .Repeat(3)
             .Subscribe(stage);
@@ -311,7 +332,7 @@ public class IntegrationTests
         Assert.AreEqual(finalStaged, stageLast.Stage);
         Assert.AreEqual(consumedCount, counter.Count);
     }
-    
+
     [TestMethod]
     public async Task TestSampleDoObservable()
     {
@@ -334,7 +355,7 @@ public class IntegrationTests
         Assert.AreEqual(10, counter.Count);
         Assert.AreEqual(3, myCounter);
     }
-    
+
     [TestMethod]
     public void TestInvalidSampleDoObservable()
     {
@@ -384,7 +405,7 @@ public class IntegrationTests
         Assert.AreEqual(7, aggregated.Stage[1]);
         Assert.AreEqual(8, aggregated.Stage[2]);
     }
-    
+
     [TestMethod]
     public async Task TestSplitObservable()
     {
@@ -413,7 +434,7 @@ public class IntegrationTests
             // ignored
         }
     }
-    
+
     [TestMethod]
     public async Task TestAggregateThenSplitObservable()
     {
@@ -509,7 +530,7 @@ public class IntegrationTests
         var asyncObservable = new AsyncObservable<int>();
         var watch = new Stopwatch();
         watch.Start();
-        
+
         var counter = new MessageCounter<int>();
         asyncObservable
             .InNewThread()
@@ -549,7 +570,7 @@ public class IntegrationTests
         Assert.IsTrue(stage.IsStaged);
         Assert.AreEqual(2333, stage.Stage);
     }
-    
+
     [TestMethod]
     public async Task TestStageSpecificMessage()
     {
@@ -565,7 +586,7 @@ public class IntegrationTests
         Assert.IsTrue(stage.IsStaged);
         Assert.AreEqual(44455, stage.Stage);
     }
-    
+
     [TestMethod]
     public async Task TestAdder()
     {
@@ -579,28 +600,29 @@ public class IntegrationTests
 
         Assert.AreEqual(80132, adder.Sum);
     }
+
     [TestMethod]
     public async Task TestAverageRecent()
     {
         var asyncObservable = new AsyncObservable<int>();
-        
+
         var averageRecent = new RecentMessageAverage<int>(3);
         asyncObservable.Subscribe(averageRecent);
-        
+
         var averageTotal = new MessageAverage<int>();
         asyncObservable.Subscribe(averageTotal);
-        
+
         await asyncObservable.BroadcastAsync(1);
 
-        var (t1, c1) = averageRecent.Average(); 
+        var (t1, c1) = averageRecent.Average();
         var (t2, c2) = averageTotal.Average();
         Assert.AreEqual(1, t1 / c1);
         Assert.AreEqual(1, t2 / c2);
 
         await asyncObservable.BroadcastAsync(2);
         await asyncObservable.BroadcastAsync(3);
-        
-        (t1, c1) = averageRecent.Average(); 
+
+        (t1, c1) = averageRecent.Average();
         (t2, c2) = averageTotal.Average();
         Assert.AreEqual(2, t1 / c1);
         Assert.AreEqual(2, t2 / c2);
@@ -608,7 +630,7 @@ public class IntegrationTests
         await asyncObservable.BroadcastAsync(3);
         await asyncObservable.BroadcastAsync(3);
 
-        (t1, c1) = averageRecent.Average(); 
+        (t1, c1) = averageRecent.Average();
         (t2, c2) = averageTotal.Average();
         Assert.AreEqual(3, t1 / c1);
         Assert.AreEqual(2.4, (double)t2 / c2);
@@ -642,6 +664,50 @@ public class IntegrationTests
         await asyncObservable.BroadcastAsync(2333);
 
         Assert.AreEqual(3, counter.Count);
+    }
+
+    [TestMethod]
+    public async Task TestBuffer()
+    {
+        var counter = new MessageCounter<int>();
+        var asyncObservable = new AsyncObservable<int>();
+        var sub = asyncObservable.WithBuffer(5).MapAsync(async res =>
+        {
+            await Task.Delay(200);
+            return res;
+        })
+        .Subscribe(counter);
+        Stopwatch watch = new();
+        watch.Start();
+        for (var i = 0; i < 6; i++) // Make the queue full.
+        {
+            await asyncObservable.BroadcastAsync(i);
+        }
+
+        Assert.IsTrue(watch.ElapsedMilliseconds < 50);
+        Assert.AreEqual(0, counter.Count);
+
+        watch.Restart();
+        for (var i = 0; i < 2; i++)
+        {
+            await asyncObservable.BroadcastAsync(i);
+        }
+
+        Assert.IsTrue(watch.ElapsedMilliseconds >= 300);
+        Assert.AreEqual(2, counter.Count);
+
+        await Task.Delay(1300);
+
+        Assert.AreEqual(8, counter.Count);
+        
+        for (var i = 0; i < 2; i++)
+        {
+            await asyncObservable.BroadcastAsync(i);
+        }
+        sub.Unsubscribe();
+        await asyncObservable.BroadcastAsync(0);
+        await Task.Delay(500);
+        Assert.AreEqual(10, counter.Count);
     }
 
     [TestMethod]
