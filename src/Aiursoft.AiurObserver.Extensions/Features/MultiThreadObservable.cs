@@ -2,7 +2,7 @@
 
 public class MultiThreadObservable<T>(IAsyncObservable<T> source, Action<Exception>? onError) : IAsyncObservable<T>
 {
-    private readonly Action<Exception> _onError = onError ?? (Console.WriteLine);
+    private readonly Action<Exception> _onError = onError ?? Console.Error.WriteLine;
 
     public ISubscription Subscribe(IConsumer<T> observer)
     {
