@@ -1,19 +1,25 @@
 ﻿namespace Aiursoft.AiurObserver.Features;
 
-public class MultiThreadObservable<T> : IAsyncObservable<T>
+public class MultiThreadObservable<T>(IAsyncObservable<T> source, Action<Exception>? onError) : IAsyncObservable<T>
 {
-    private readonly IAsyncObservable<T> _source;
-    public MultiThreadObservable(IAsyncObservable<T> source)
-    {
-        _source = source;
-    }
+    private readonly Action<Exception> _onError = onError ?? (Console.WriteLine);
 
     public ISubscription Subscribe(IConsumer<T> observer)
     {
         var consumer = new Consumer<T>(async value =>
         {
-            await Task.Factory.StartNew(() => observer.Consume(value), TaskCreationOptions.LongRunning);
+            await Task.Factory.StartNew(async () =>
+            {
+                try
+                {
+                    await observer.Consume(value);
+                }
+                catch (Exception ex)
+                {
+                    _onError(ex);
+                }
+            }, TaskCreationOptions.LongRunning);
         });
-        return _source.Subscribe(consumer);
+        return source.Subscribe(consumer);
     }
 }

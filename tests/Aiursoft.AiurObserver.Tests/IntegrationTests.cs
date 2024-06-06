@@ -415,8 +415,8 @@ public class IntegrationTests
             .ForEach()
             .Subscribe(counter);
 
-        await asyncObservable.BroadcastAsync(new[] { 1, 2, 3 });
-        await asyncObservable.BroadcastAsync(new[] { 1, 2, 3 });
+        await asyncObservable.BroadcastAsync([1, 2, 3]);
+        await asyncObservable.BroadcastAsync([1, 2, 3]);
         Assert.AreEqual(6, counter.Count);
     }
 
@@ -452,6 +452,45 @@ public class IntegrationTests
         await asyncObservable.BroadcastAsync(5);
         await asyncObservable.BroadcastAsync(6);
         Assert.AreEqual(6, counter.Count);
+    }
+
+    [TestMethod]
+    public async Task TestInNewThreadWithError()
+    {
+        var asyncObservable = new AsyncObservable<int>();
+        var exceptionHappened = false;
+        var happenedException = null as Exception;
+        
+        var stage = new MessageStageLast<int>();
+        var stageLast = new MessageCounter<int>();
+        asyncObservable
+            .InNewThread(onError: e =>
+            {
+                Console.WriteLine(e);
+                exceptionHappened = true;
+                happenedException = e;
+            })
+            .Map(t =>
+            {
+                if (t == 3)
+                {
+                    throw new Exception("Test error. This is expected and should not stop the process.");
+                }
+                return t;
+            })
+            .Subscribe(stage);
+        asyncObservable
+            .Subscribe(stageLast);
+
+        for (var i = 0; i < 10; i++)
+        {
+            await asyncObservable.BroadcastAsync(i);
+        }
+        
+        Assert.AreEqual(10, stageLast.Count, "All 9 messages should be received. Exception should not stop the process.");
+        Assert.IsTrue(exceptionHappened);
+        Assert.IsNotNull(happenedException);
+        Assert.AreEqual("Test error. This is expected and should not stop the process.", happenedException.Message);
     }
 
     [TestMethod]

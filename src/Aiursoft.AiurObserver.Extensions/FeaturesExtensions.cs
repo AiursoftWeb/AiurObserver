@@ -58,9 +58,9 @@ namespace Aiursoft.AiurObserver
             return new SplitObservable<T>(source);
         }
         
-        public static MultiThreadObservable<T> InNewThread<T>(this IAsyncObservable<T> source)
+        public static MultiThreadObservable<T> InNewThread<T>(this IAsyncObservable<T> source, Action<Exception>? onError = null)
         {
-            return new MultiThreadObservable<T>(source);
+            return new MultiThreadObservable<T>(source, onError);
         }
         
         public static LockedObservable<T> LockOneThread<T>(this IAsyncObservable<T> source)
