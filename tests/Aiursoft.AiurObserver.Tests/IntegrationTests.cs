@@ -755,7 +755,7 @@ public class IntegrationTests
         var counter = new MessageCounter<int>();
         var asyncObservable = new AsyncObservable<int>();
         Exception? errorReported = null;
-        var sub = asyncObservable.WithBuffer(5, ex => errorReported = ex).MapAsync(async res =>
+        asyncObservable.WithBuffer(5, ex => errorReported = ex).MapAsync(async res =>
         {
             await Task.Delay(100);
             if (res == 1)
