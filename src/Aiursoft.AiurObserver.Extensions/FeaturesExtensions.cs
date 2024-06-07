@@ -73,9 +73,9 @@ namespace Aiursoft.AiurObserver
             return new DelayedObservable<T>(source, delay);
         }
         
-        public static BufferObservable<T> WithBuffer<T>(this IAsyncObservable<T> source, int maxBufferLength)
+        public static BufferObservable<T> WithBuffer<T>(this IAsyncObservable<T> source, int maxBufferLength, Action<Exception>? onError = null)
         {
-            return new BufferObservable<T>(source, maxBufferLength);
+            return new BufferObservable<T>(source, maxBufferLength, onError);
         }
     }
 }
