@@ -748,6 +748,33 @@ public class IntegrationTests
         await Task.Delay(500);
         Assert.AreEqual(10, counter.Count);
     }
+    
+    [TestMethod]
+    public async Task TestBufferWithError()
+    {
+        var counter = new MessageCounter<int>();
+        var asyncObservable = new AsyncObservable<int>();
+        Exception? errorReported = null;
+        asyncObservable.WithBuffer(5, ex => errorReported = ex).MapAsync(async res =>
+        {
+            await Task.Delay(100);
+            if (res == 1)
+            {
+                throw new Exception("Test error. This is expected and should not stop the process.");
+            }
+            return res;
+        })
+        .Subscribe(counter);
+        
+        for (var i = 0; i < 4; i++)
+        {
+            await asyncObservable.BroadcastAsync(i);
+        }
+
+        await Task.Delay(500);
+        Assert.IsNotNull(errorReported);
+        Assert.AreEqual(counter.Count, 3);
+    }
 
     [TestMethod]
     public async Task FullFeaturesTest()
