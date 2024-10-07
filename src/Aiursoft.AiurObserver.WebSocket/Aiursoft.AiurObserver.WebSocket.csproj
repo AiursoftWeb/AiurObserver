@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <Version>8.0.2</Version>
+    <Version>8.0.3</Version>
     <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>Aiursoft.AiurObserver.WebSocket</AssemblyName>
     <RootNamespace>Aiursoft.AiurObserver.WebSocket</RootNamespace>
@@ -15,6 +15,10 @@
     <Description>Nuget package of 'WebSocket' provided by Aiursoft</Description>
     <PackageId>Aiursoft.AiurObserver.WebSocket</PackageId>
     <PackageTags>nuget package dotnet csproj dependencies</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://gitlab.aiursoft.cn/aiursoft/aiurobserver</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://gitlab.aiursoft.cn/aiursoft/aiurobserver.git</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
