@@ -41,11 +41,11 @@ public class AsyncObservable<T> : IAsyncObservable<T>
         }
     }
 
-    private IEnumerable<Task> PrepareBroadcastTasks(T newEvent)
+    private Task[] PrepareBroadcastTasks(T newEvent)
     {
         lock (ObserversEditLock)
         {
-            return Observers.Select(t => t.Consume(newEvent));
+            return Observers.Select(t => t.Consume(newEvent)).ToArray();
         }
     }
 

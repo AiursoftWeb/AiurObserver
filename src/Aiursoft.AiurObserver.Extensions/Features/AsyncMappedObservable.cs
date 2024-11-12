@@ -1,6 +1,4 @@
-﻿using Aiursoft.AiurObserver.Extensions;
-
-namespace Aiursoft.AiurObserver.Features;
+﻿namespace Aiursoft.AiurObserver.Features;
 
 public class AsyncMappedObservable<T1, T> : IAsyncObservable<T>
 {
