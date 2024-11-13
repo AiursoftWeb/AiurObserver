@@ -1,5 +1,6 @@
 ﻿using System.Net.WebSockets;
 using System.Text;
+using Microsoft.AspNetCore.Connections;
 
 namespace Aiursoft.AiurObserver.WebSocket;
 
@@ -8,30 +9,43 @@ public class ObservableWebSocket : AsyncObservable<string>, IConsumer<string>
     private bool _dropped;
     private readonly System.Net.WebSockets.WebSocket _ws;
     
-    // ReSharper disable once UnusedMember.Global
     public bool Connected => !_dropped && _ws.State == WebSocketState.Open;
     
     public ObservableWebSocket(System.Net.WebSockets.WebSocket ws)
     {
+        if (ws.State != WebSocketState.Open)
+        {
+            throw new WebSocketException("WebSocket is not open! Please first `Accept` or `Connect` the WebSocket.");
+        }
         _ws = ws;
     }
     
-    // ReSharper disable once UnusedMember.Global
-    // ReSharper disable once MemberCanBePrivate.Global
     public async Task Send(string message, CancellationToken token = default)
     {
         try
         {
-            if (_dropped)
+            if (!Connected)
             {
-                throw new WebSocketException("WebSocket is dropped!");
+                throw new WebSocketException("WebSocket is not connected!");
             }
+
             var buffer = new ArraySegment<byte>(Encoding.UTF8.GetBytes(message));
             await _ws.SendAsync(buffer, WebSocketMessageType.Text, true, token);
         }
         catch (WebSocketException)
         {
             _dropped = true;
+            await Close(token);
+        }
+        catch (TaskCanceledException)
+        {
+            _dropped = true;
+            await Close(token);
+        }
+        catch (ConnectionAbortedException)
+        {
+            _dropped = true;
+            await Close(token);
         }
     }
 
@@ -75,11 +89,19 @@ public class ObservableWebSocket : AsyncObservable<string>, IConsumer<string>
         }
         catch (WebSocketException)
         {
-            // Remote side closed the connection.
-            _dropped = true;
+            // Ignore. This happens when the client closes the connection.
+        }
+        catch (TaskCanceledException)
+        {
+            // Ignore. This happens when the client closes the connection.
+        }
+        catch (ConnectionAbortedException)
+        {
+            // Ignore. This happens when the client closes the connection.
         }
         finally
         {
+            _dropped = true;
             await Close(token);
         }
     }
@@ -87,22 +109,29 @@ public class ObservableWebSocket : AsyncObservable<string>, IConsumer<string>
     // ReSharper disable once UnusedMember.Global
     public Task Close(CancellationToken token = default)
     {
-        if (_ws.State == WebSocketState.Open)
-        {
-            return _ws.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Close the connection.", token);
-        }
-
         _dropped = true;
         lock (ObserversEditLock)
         {
             Observers.Clear();
         }
 
+        if (_ws.State == WebSocketState.Open)
+        {
+            if (!token.IsCancellationRequested) 
+            {
+                return _ws.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Close the connection.", token);
+            }
+            else
+            {
+                return _ws.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Close the connection.", CancellationToken.None);
+            }
+        }
+
         return Task.CompletedTask;
     }
 
-    public Task Consume (string message)
+    public Task Consume(string message)
     {
-        return _ws.State == WebSocketState.Open ? Send(message) : Task.CompletedTask;
+        return Connected ? Send(message) : Task.CompletedTask;
     }
 }

@@ -27,7 +27,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Aiursoft.AiurObserver.Abstractions\Aiursoft.AiurObserver.Abstractions.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
 </Project>

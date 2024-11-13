@@ -6,7 +6,10 @@ public class MessageCounter<T> : AsyncObservable<int>, IConsumer<T>
     
     public async Task Consume(T value)
     {
-        Count++;
+        lock (this)
+        {
+            Count++;
+        }
         await BroadcastAsync(Count);
     }
 }
