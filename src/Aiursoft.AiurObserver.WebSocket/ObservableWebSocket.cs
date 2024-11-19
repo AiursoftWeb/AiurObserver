@@ -54,37 +54,42 @@ public class ObservableWebSocket : AsyncObservable<string>, IConsumer<string>
     {
         try
         {
-            var buffer = new ArraySegment<byte>(new byte[4 * 1024]);
             while (true)
             {
-                var message = await _ws.ReceiveAsync(buffer, token);
-                switch (message.MessageType)
+                var messageBuffer = new List<byte>();
+                WebSocketReceiveResult message;
+
+                do
                 {
-                    case WebSocketMessageType.Text:
+                    var buffer = new ArraySegment<byte>(new byte[4 * 1024]);
+                    message = await _ws.ReceiveAsync(buffer, token);
+
+                    switch (message.MessageType)
                     {
-                        var messageBytes = buffer.Skip(buffer.Offset).Take(message.Count).ToArray();
-                        var messageString = Encoding.UTF8.GetString(messageBytes);
-                        await BroadcastAsync(messageString);
-                        break;
+                        case WebSocketMessageType.Text:
+                            messageBuffer.AddRange(buffer.Array!.Skip(buffer.Offset).Take(message.Count));
+                            break;
+                        case WebSocketMessageType.Close:
+                            await _ws.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Closed by client.", token);
+                            _dropped = true;
+                            return;
+                        case WebSocketMessageType.Binary:
+                            // Handle binary messages if needed
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
-                    case WebSocketMessageType.Close:
-                        await _ws.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Close because of error.",
-                            token);
-                        _dropped = true;
-                        return;
-                    case WebSocketMessageType.Binary:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
 
-                if (_ws.State == WebSocketState.Open)
+                } while (!message.EndOfMessage);
+
+                var messageString = Encoding.UTF8.GetString(messageBuffer.ToArray());
+                await BroadcastAsync(messageString);
+
+                if (_ws.State != WebSocketState.Open)
                 {
-                    continue;
+                    _dropped = true;
+                    return;
                 }
-
-                _dropped = true;
-                return;
             }
         }
         catch (WebSocketException)

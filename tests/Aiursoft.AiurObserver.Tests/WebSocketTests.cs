@@ -266,5 +266,55 @@ public class WebSocketTests
 
         Assert.IsFalse(client.Connected); // 验证客户端确实已断开
     }
+    
+    [TestMethod]
+    public async Task TestLargeMessageReflection()
+    {
+        var port = Network.GetAvailablePort();
+        var builder = WebApplication.CreateBuilder();
+        var reflector = new AsyncReflector<string>();
+        builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+        var app = builder.Build();
+        app.UseWebSockets();
+        app.Use(async (HttpContext context, RequestDelegate _) =>
+        {
+            var ws = await context.AcceptWebSocketClient();
+            reflector.Subscribe(ws);
+            ws.Subscribe(reflector);
+            await ws.Listen(context.RequestAborted);
+        });
+
+        await app.StartAsync();
+
+        var client = await $"ws://localhost:{port}/".ConnectAsWebSocketServer();
+        var receivedMessage = string.Empty;
+        client.Subscribe(message =>
+        {
+            receivedMessage = message;
+            return Task.CompletedTask;
+        });
+
+        await Task.Factory.StartNew(() => client.Listen());
+
+        // Generate a random string of length 0xFFFF
+        var random = new Random();
+        var buffer = new byte[0xFFFF];
+        random.NextBytes(buffer);
+        var originalMessage = Convert.ToBase64String(buffer); // Use Base64 to ensure it's a valid text message
+
+        await client.Send(originalMessage);
+
+        // Wait for the message to be reflected back
+        var timeoutTask = Task.Delay(5000); // 5-second timeout
+        while (string.IsNullOrEmpty(receivedMessage) && !timeoutTask.IsCompleted)
+        {
+            await Task.Delay(100);
+        }
+
+        Assert.AreEqual(originalMessage, receivedMessage, "The reflected message should match the original message.");
+
+        await client.Close();
+        Assert.IsFalse(client.Connected);
+    }
 
 }
