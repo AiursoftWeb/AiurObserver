@@ -104,6 +104,10 @@ public class ObservableWebSocket : AsyncObservable<string>, IConsumer<string>
         {
             // Ignore. This happens when the client closes the connection.
         }
+        catch (OperationCanceledException)
+        {
+            // Ignore. This happens when the client closes the connection.
+        }
         finally
         {
             _dropped = true;
