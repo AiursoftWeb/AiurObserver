@@ -802,4 +802,36 @@ public class IntegrationTests
         Assert.AreEqual(1400, stage.Stage[1]);
         Assert.AreEqual(1600, stage.Stage[2]);
     }
+
+    [TestMethod]
+    public async Task TestWaitOneEvent()
+    {
+        var asyncObservable = new AsyncObservable<int>();
+        var messageStage = new MessageStageLast<int>();
+        asyncObservable.Subscribe(messageStage);
+
+        // Start waiting for the next event
+        var waitTask = messageStage.WaitOneEvent();
+
+        // Ensure the task is not completed yet
+        Assert.IsFalse(waitTask.IsCompleted, "WaitOneEvent should not complete before an event is received.");
+
+        // Broadcast an event after a short delay
+        var broadcastTask = Task.Run(async () =>
+        {
+            await Task.Delay(100); // Simulate some delay before the event
+            await asyncObservable.BroadcastAsync(42);
+        });
+
+        // Wait for the event to be received
+        var result = await waitTask;
+
+        // Ensure the result is as expected
+        Assert.AreEqual(42, result);
+        Assert.IsTrue(messageStage.IsStaged);
+        Assert.AreEqual(42, messageStage.Stage);
+
+        // Ensure the broadcast task has completed
+        await broadcastTask;
+    }
 }
