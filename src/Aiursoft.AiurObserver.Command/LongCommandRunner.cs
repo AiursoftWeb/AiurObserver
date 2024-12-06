@@ -59,7 +59,7 @@ public class LongCommandRunner
                 Arguments = arg,
                 CreateNoWindow = true,
                 WindowStyle = ProcessWindowStyle.Hidden,
-                WorkingDirectory = Path.GetTempPath(),
+                WorkingDirectory = path,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
