@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using Aiursoft.AiurObserver.DefaultConsumers;
 
+[assembly: DoNotParallelize]
+
 namespace Aiursoft.AiurObserver.Tests;
 
 [TestClass]
