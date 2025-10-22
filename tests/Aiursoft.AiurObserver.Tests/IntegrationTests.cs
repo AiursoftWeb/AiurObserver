@@ -241,7 +241,7 @@ public class IntegrationTests
         }
 
         watch.Stop();
-        Assert.IsTrue(watch.ElapsedMilliseconds >= 1000 - 10);
+        Assert.IsGreaterThanOrEqualTo(1000 - 10, watch.ElapsedMilliseconds);
 
         doSub.Unsubscribe();
         watch.Restart();
@@ -251,7 +251,7 @@ public class IntegrationTests
         }
 
         watch.Stop();
-        Assert.IsTrue(watch.ElapsedMilliseconds < 10);
+        Assert.IsLessThan(10, watch.ElapsedMilliseconds);
     }
 
     [TestMethod]
@@ -458,7 +458,7 @@ public class IntegrationTests
         var asyncObservable = new AsyncObservable<int>();
         var exceptionHappened = false;
         var happenedException = null as Exception;
-        
+
         var stage = new MessageStageLast<int>();
         var stageLast = new MessageCounter<int>();
         asyncObservable
@@ -484,7 +484,7 @@ public class IntegrationTests
         {
             await asyncObservable.BroadcastAsync(i);
         }
-        
+
         Assert.AreEqual(10, stageLast.Count, "All 9 messages should be received. Exception should not stop the process.");
         Assert.IsTrue(exceptionHappened);
         Assert.IsNotNull(happenedException);
@@ -509,7 +509,7 @@ public class IntegrationTests
             await asyncObservable.BroadcastAsync(i);
         }
 
-        Assert.IsTrue(watch.ElapsedMilliseconds < 50, watch.ElapsedMilliseconds.ToString());
+        Assert.IsLessThan(50, watch.ElapsedMilliseconds, watch.ElapsedMilliseconds.ToString());
 
         // Count to 4
         while (stage.Stage != 4)
@@ -517,8 +517,8 @@ public class IntegrationTests
             await Task.Delay(10);
         }
 
-        Assert.IsTrue(watch.ElapsedMilliseconds >= 400, watch.ElapsedMilliseconds.ToString());
-        Assert.IsTrue(watch.ElapsedMilliseconds <= 600, watch.ElapsedMilliseconds.ToString());
+        Assert.IsGreaterThanOrEqualTo(400, watch.ElapsedMilliseconds, watch.ElapsedMilliseconds.ToString());
+        Assert.IsLessThanOrEqualTo(600, watch.ElapsedMilliseconds, watch.ElapsedMilliseconds.ToString());
 
         // Count to 9
         while (stage.Stage != 9)
@@ -527,8 +527,8 @@ public class IntegrationTests
         }
 
         watch.Stop();
-        Assert.IsTrue(watch.ElapsedMilliseconds >= 990, watch.ElapsedMilliseconds.ToString());
-        Assert.IsTrue(watch.ElapsedMilliseconds <= 1200, watch.ElapsedMilliseconds.ToString());
+        Assert.IsGreaterThanOrEqualTo(990, watch.ElapsedMilliseconds, watch.ElapsedMilliseconds.ToString());
+        Assert.IsLessThanOrEqualTo(1200, watch.ElapsedMilliseconds, watch.ElapsedMilliseconds.ToString());
     }
 
     [TestMethod]
@@ -549,16 +549,16 @@ public class IntegrationTests
             await asyncObservable.BroadcastAsync(i);
         }
 
-        Assert.IsTrue(watch.ElapsedMilliseconds < 50, watch.ElapsedMilliseconds.ToString());
-        Assert.AreEqual(false, stage.IsStaged);
+        Assert.IsLessThan(50, watch.ElapsedMilliseconds, watch.ElapsedMilliseconds.ToString());
+        Assert.IsFalse(stage.IsStaged);
         while (!stage.IsStaged)
         {
             await Task.Delay(10);
         }
 
         watch.Stop();
-        Assert.IsTrue(watch.ElapsedMilliseconds >= 200, watch.ElapsedMilliseconds.ToString());
-        Assert.IsTrue(watch.ElapsedMilliseconds <= 300, watch.ElapsedMilliseconds.ToString());
+        Assert.IsGreaterThanOrEqualTo(200, watch.ElapsedMilliseconds, watch.ElapsedMilliseconds.ToString());
+        Assert.IsLessThanOrEqualTo(300, watch.ElapsedMilliseconds, watch.ElapsedMilliseconds.ToString());
     }
 
     [TestMethod]
@@ -580,7 +580,7 @@ public class IntegrationTests
             await asyncObservable.BroadcastAsync(i);
         }
 
-        Assert.IsTrue(watch.ElapsedMilliseconds < 60, watch.ElapsedMilliseconds.ToString());
+        Assert.IsLessThan(60, watch.ElapsedMilliseconds, watch.ElapsedMilliseconds.ToString());
 
         while (counter.Count != 10)
         {
@@ -588,8 +588,8 @@ public class IntegrationTests
         }
 
         watch.Stop();
-        Assert.IsTrue(watch.ElapsedMilliseconds >= 100, watch.ElapsedMilliseconds.ToString());
-        Assert.IsTrue(watch.ElapsedMilliseconds <= 180, watch.ElapsedMilliseconds.ToString());
+        Assert.IsGreaterThanOrEqualTo(100, watch.ElapsedMilliseconds, watch.ElapsedMilliseconds.ToString());
+        Assert.IsLessThanOrEqualTo(180, watch.ElapsedMilliseconds, watch.ElapsedMilliseconds.ToString());
     }
 
     [TestMethod]
@@ -721,7 +721,7 @@ public class IntegrationTests
             await asyncObservable.BroadcastAsync(i);
         }
 
-        Assert.IsTrue(watch.ElapsedMilliseconds < 50);
+        Assert.IsLessThan(50, watch.ElapsedMilliseconds);
         Assert.AreEqual(0, counter.Count);
 
         watch.Restart();
@@ -730,13 +730,13 @@ public class IntegrationTests
             await asyncObservable.BroadcastAsync(i);
         }
 
-        Assert.IsTrue(watch.ElapsedMilliseconds >= 300);
+        Assert.IsGreaterThanOrEqualTo(300, watch.ElapsedMilliseconds);
         Assert.AreEqual(2, counter.Count);
 
         await Task.Delay(1300);
 
         Assert.AreEqual(8, counter.Count);
-        
+
         for (var i = 0; i < 2; i++)
         {
             await asyncObservable.BroadcastAsync(i);
@@ -746,7 +746,7 @@ public class IntegrationTests
         await Task.Delay(500);
         Assert.AreEqual(10, counter.Count);
     }
-    
+
     [TestMethod]
     public async Task TestBufferWithError()
     {
@@ -763,7 +763,7 @@ public class IntegrationTests
             return res;
         })
         .Subscribe(counter);
-        
+
         for (var i = 0; i < 4; i++)
         {
             await asyncObservable.BroadcastAsync(i);
@@ -771,7 +771,7 @@ public class IntegrationTests
 
         await Task.Delay(500);
         Assert.IsNotNull(errorReported);
-        Assert.AreEqual(counter.Count, 3);
+        Assert.AreEqual(3, counter.Count);
     }
 
     [TestMethod]
