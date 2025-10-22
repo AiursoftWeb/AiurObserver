@@ -401,6 +401,7 @@ public class IntegrationTests
         }
 
         Assert.IsNotNull(aggregated.Stage);
+        Assert.IsGreaterThanOrEqualTo(3, aggregated.Stage.Length);
         Assert.AreEqual(6, aggregated.Stage[0]);
         Assert.AreEqual(7, aggregated.Stage[1]);
         Assert.AreEqual(8, aggregated.Stage[2]);
@@ -490,7 +491,7 @@ public class IntegrationTests
         Assert.AreEqual(10, stageLast.Count, "All 9 messages should be received. Exception should not stop the process.");
         Assert.IsTrue(exceptionHappened);
         Assert.IsNotNull(happenedException);
-        Assert.AreEqual("Test error. This is expected and should not stop the process.", happenedException.Message);
+        Assert.AreEqual("Test error. This is expected and should not stop the process.", happenedException!.Message);
     }
 
     [TestMethod]
@@ -799,6 +800,7 @@ public class IntegrationTests
 
         Assert.AreEqual(6, events);
         Assert.IsNotNull(stage.Stage);
+        Assert.IsGreaterThanOrEqualTo(3, stage.Stage.Length);
         Assert.AreEqual(1000, stage.Stage[0]);
         Assert.AreEqual(1400, stage.Stage[1]);
         Assert.AreEqual(1600, stage.Stage[2]);
