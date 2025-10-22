@@ -5,7 +5,6 @@ using Aiursoft.CSTools.Tools;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 // ReSharper disable StringLiteralTypo
 
