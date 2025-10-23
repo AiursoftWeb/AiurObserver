@@ -2,7 +2,6 @@ using System.Runtime.InteropServices;
 using Aiursoft.AiurObserver.Command;
 using Aiursoft.AiurObserver.DefaultConsumers;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Aiursoft.AiurObserver.Tests;
 
@@ -25,7 +24,7 @@ public class CommandTest
         
         await runner.Run("ping", _testCommand, Environment.CurrentDirectory);
         
-        Assert.IsTrue(counter.Count > 0);
+        Assert.IsGreaterThan(0, counter.Count);
         Assert.IsTrue(stage.Stage?.Contains("ms"));
     }
     
@@ -53,7 +52,7 @@ public class CommandTest
             Assert.IsTrue(e is TaskCanceledException);
         }
         
-        Assert.IsTrue(counter.Count > 0);
-        Assert.IsTrue(stage.Stage != null);
+        Assert.IsGreaterThan(0, counter.Count);
+        Assert.IsNotNull(stage.Stage);
     }
 }

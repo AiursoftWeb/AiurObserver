@@ -1,6 +1,5 @@
 ﻿using Aiursoft.AiurObserver.Clock;
 using Aiursoft.AiurObserver.DefaultConsumers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Aiursoft.AiurObserver.Tests;
 

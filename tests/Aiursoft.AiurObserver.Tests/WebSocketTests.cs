@@ -5,7 +5,6 @@ using Aiursoft.CSTools.Tools;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 // ReSharper disable StringLiteralTypo
 
@@ -117,7 +116,7 @@ public class WebSocketTests
         await Task.Delay(200); // Wait to ensure server closes the connection
 
         Assert.IsFalse(client.Connected); // Client should be disconnected gracefully
-        Assert.IsTrue(receivedMessages.Contains("server message")); // Verify message reception before disconnect
+        Assert.Contains("server message", receivedMessages); // Verify message reception before disconnect
     }
 
     [TestMethod]
@@ -138,17 +137,17 @@ public class WebSocketTests
         });
 
         await app.StartAsync();
-        
+
         var client = await $"ws://localhost:{port}/".ConnectAsWebSocketServer();
         var count = new MessageCounter<string>();
         client.Subscribe(count);
         await Task.Factory.StartNew(() => client.Listen());
-        
-        var client2 = await $"ws://localhost:{port}/".ConnectAsWebSocketServer();   
-        var count2 = new MessageCounter<string>();  
+
+        var client2 = await $"ws://localhost:{port}/".ConnectAsWebSocketServer();
+        var count2 = new MessageCounter<string>();
         client2.Subscribe(count2);
         await Task.Factory.StartNew(() => client2.Listen());
-        
+
         Parallel.For(0, 10, _ =>
         {
             for (var j = 0; j < 100 * 500; j++)
@@ -158,17 +157,17 @@ public class WebSocketTests
                 Task.WhenAll(task1, task2).Wait();
             }
         });
-        
+
         // 10 * 100 * 500 * 2 = 100 * 100 * 100
-        
-        await Task.Delay(2000); 
+
+        await Task.Delay(2000);
         Assert.AreEqual(100 * 100 * 100, count.Count);
         Assert.AreEqual(100 * 100 * 100, count2.Count);
-        
+
         await client.Close();
         Assert.IsFalse(client.Connected);
     }
-    
+
     [TestMethod]
     public async Task TestServerSuddenShutdown()
     {
@@ -194,7 +193,7 @@ public class WebSocketTests
         await Task.Delay(100); // 等待处理
         Assert.IsFalse(client.Connected); // 客户端应断开连接
     }
-    
+
     [TestMethod]
     public async Task TestHighConcurrentClients()
     {
@@ -228,10 +227,10 @@ public class WebSocketTests
 
         await Task.WhenAll(tasks);
         await Task.Delay(2000);
-        
+
         Assert.AreEqual(2000, counter.Count);
     }
-    
+
     [TestMethod]
     public async Task TestClientMidConnectionDisconnect()
     {
@@ -247,7 +246,7 @@ public class WebSocketTests
             client.Subscribe(messageCount);
 
             await client.Listen(context.RequestAborted);
-            Assert.IsTrue(messageCount.Count > 0); // 确认在断开前收到至少一个消息
+            Assert.IsGreaterThan(0, messageCount.Count); // 确认在断开前收到至少一个消息
         });
 
         await app.StartAsync();
@@ -266,7 +265,7 @@ public class WebSocketTests
 
         Assert.IsFalse(client.Connected); // 验证客户端确实已断开
     }
-    
+
     [TestMethod]
     public async Task TestLargeMessageReflection()
     {
