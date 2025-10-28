@@ -16,9 +16,9 @@
     <PackageId>Aiursoft.AiurObserver.WebSocket</PackageId>
     <PackageTags>nuget package dotnet csproj dependencies</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://gitlab.aiursoft.cn/aiursoft/aiurobserver</PackageProjectUrl>
+    <PackageProjectUrl>https://gitlab.aiursoft.com/aiursoft/aiurobserver</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://gitlab.aiursoft.cn/aiursoft/aiurobserver.git</RepositoryUrl>
+    <RepositoryUrl>https://gitlab.aiursoft.com/aiursoft/aiurobserver.git</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
