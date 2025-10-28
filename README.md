@@ -4,7 +4,7 @@
 [![Pipeline stat](https://gitlab.aiursoft.com/aiursoft/AiurObserver/badges/master/pipeline.svg)](https://gitlab.aiursoft.com/aiursoft/AiurObserver/-/pipelines)
 [![Test Coverage](https://gitlab.aiursoft.com/aiursoft/AiurObserver/badges/master/coverage.svg)](https://gitlab.aiursoft.com/aiursoft/AiurObserver/-/pipelines)
 [![NuGet version (Aiursoft.AiurObserver)](https://img.shields.io/nuget/v/Aiursoft.AiurObserver.svg)](https://www.nuget.org/packages/Aiursoft.AiurObserver/)
-[![ManHours](https://manhours.aiursoft.cn/r/gitlab.aiursoft.com/aiursoft/AiurObserver.svg)](https://gitlab.aiursoft.com/aiursoft/AiurObserver/-/commits/master?ref_type=heads)
+[![ManHours](https://manhours.aiursoft.com/r/gitlab.aiursoft.com/aiursoft/AiurObserver.svg)](https://gitlab.aiursoft.com/aiursoft/AiurObserver/-/commits/master?ref_type=heads)
 
 AiurObserver is a powerful C# development tool that allows you to construct an object that can be observed asynchronously. It comes with a set of operators that make it easy for you to manipulate and process data streams.
 
