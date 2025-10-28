@@ -9,7 +9,7 @@ namespace Aiursoft.AiurObserver.Tests;
 public class CommandTest
 {
     private readonly string _testCommand =
-        RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "-n 2 www.aiursoft.cn" : "-c 2 www.aiursoft.cn";
+        RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "-n 2 www.aiursoft.com" : "-c 2 www.aiursoft.com";
 
     [TestMethod]
     public async Task TestLongRunningCommand()
