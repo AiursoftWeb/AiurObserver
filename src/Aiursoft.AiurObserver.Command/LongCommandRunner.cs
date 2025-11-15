@@ -45,8 +45,8 @@ public class LongCommandRunner
     /// <param name="token">A <see cref="CancellationToken"/> to cancel the operation (optional).</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous execution.</returns>
     public async Task Run(
-        string bin, 
-        string arg, 
+        string bin,
+        string arg,
         string path,
         CancellationToken token = default)
     {
@@ -68,11 +68,15 @@ public class LongCommandRunner
         process.Start();
 
         _logger.LogTrace("Starting monitor process: {ProcessName} {ProcessArgs}", bin, arg);
-        
+
         // await twice, in case the task throws an exception.
         await await Task.WhenAny(
-            // Use Task.Run here. Because calling `process.StandardError.EndOfStream` will block the thread.
-            Task.Run(MonitorOutputTask, token), Task.Run(MonitorErrorTask, token), process.WaitForExitAsync(token)
+            // Use Task.Run here. Because we're in an async method,
+            // we use Task.Run to ensure the monitoring loops don't block the caller,
+            // even though they are internally async.
+            Task.Run(MonitorOutputTask, token),
+            Task.Run(MonitorErrorTask, token),
+            process.WaitForExitAsync(token)
         );
         _logger.LogWarning("The monitor WhenAny task has exited: {ProcessName} {ProcessArgs}", bin, arg);
 
@@ -89,29 +93,19 @@ public class LongCommandRunner
 
         async Task MonitorOutputTask()
         {
-            while (!process.StandardOutput.EndOfStream)
+            string? line;
+            while ((line = await process.StandardOutput.ReadLineAsync(token)) is not null)
             {
-                if (token.IsCancellationRequested)
-                {
-                    process.Kill();
-                    return;
-                }
-                
-                await Output.BroadcastAsync(await process.StandardOutput.ReadLineAsync(token) ?? string.Empty);
+                await Output.BroadcastAsync(line);
             }
         }
-        
+
         async Task MonitorErrorTask()
         {
-            while (!process.StandardError.EndOfStream)
+            string? line;
+            while ((line = await process.StandardError.ReadLineAsync(token)) is not null)
             {
-                if (token.IsCancellationRequested)
-                {
-                    process.Kill();
-                    return;
-                }
-                
-                await Error.BroadcastAsync(await process.StandardError.ReadLineAsync(token) ?? string.Empty);
+                await Error.BroadcastAsync(line);
             }
         }
     }

@@ -14,20 +14,12 @@ public class ObservableStream : AsyncObservable<string>
     public async Task ReadToEndAsync(CancellationToken token = default)
     {
         var reader = new StreamReader(_stream, Encoding.UTF8);
-        while (true)
+
+        while (await reader.ReadLineAsync(token) is { } line)
         {
-            if (reader.EndOfStream || token.IsCancellationRequested)
-            {
-                break;
-            }
-            
-            var line = await reader.ReadLineAsync(token);
-            if (line != null)
-            {
-                await BroadcastAsync(line);
-            }
+            await BroadcastAsync(line);
         }
-        
+
         RemoveAllListeners();
     }
 }
