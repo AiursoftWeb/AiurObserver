@@ -29,10 +29,6 @@ public class AsyncObservable<T> : IAsyncObservable<T>
                 {
                     if (!Observers.Remove(observer)) throw new Exception("Failed to remove observer.");
                 }
-                else
-                {
-                    throw new InvalidOperationException("This subscription has already been unsubscribed!");
-                }
             }
         }
     }

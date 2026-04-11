@@ -76,26 +76,14 @@ public class IntegrationTests
     }
 
     [TestMethod]
-    public void UnRegisterMultiTimesFailedTest()
+    public void UnRegisterMultiTimesIdempotentTest()
     {
         var asyncObservable = new AsyncObservable<int>();
         var subscription = asyncObservable.Subscribe(_ => Task.CompletedTask);
         subscription.Unsubscribe();
-
-        var threw = false;
-        try
-        {
-            subscription.Unsubscribe();
-        }
-        catch (InvalidOperationException)
-        {
-            threw = true;
-        }
-
-        if (!threw)
-        {
-            Assert.Fail("Should have thrown InvalidOperationException on second unsubscription.");
-        }
+        
+        // This should not throw an exception to remain compatible with old apps
+        subscription.Unsubscribe();
     }
 
     [TestMethod]
