@@ -1,4 +1,5 @@
 ﻿using Aiursoft.AiurObserver.Clock;
+using Aiursoft.AiurObserver.DefaultConsumers;
 
 namespace Aiursoft.AiurObserver.Tests;
 
