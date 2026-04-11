@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Aiursoft.AiurObserver.DefaultConsumers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [assembly: DoNotParallelize]
 
@@ -76,13 +77,26 @@ public class IntegrationTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void UnRegisterMultiTimesFailedTest()
     {
         var asyncObservable = new AsyncObservable<int>();
         var subscription = asyncObservable.Subscribe(_ => Task.CompletedTask);
         subscription.Unsubscribe();
-        subscription.Unsubscribe();
+
+        var threw = false;
+        try
+        {
+            subscription.Unsubscribe();
+        }
+        catch (InvalidOperationException)
+        {
+            threw = true;
+        }
+
+        if (!threw)
+        {
+            Assert.Fail("Should have thrown InvalidOperationException on second unsubscription.");
+        }
     }
 
     [TestMethod]
