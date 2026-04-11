@@ -9,6 +9,8 @@ AiurObserver is a lightweight, asynchronous C\# implementation of the Observer d
 * [The AiurObserver Pattern (vs. IEnumerable)](#-the-aiurobserver-pattern-vs-ienumerable)
 * [Fundamental Rules](#-fundamental-rules)
 * [Built-in Consumers](#-built-in-consumers)
+* [WebSocket Deep Dive (Advanced Patterns)](./WebSocket.md)
+* [Clock Deep Dive (Advanced Patterns)](./Clock.md)
 * [Chaining Operators (Features)](#-chaining-operators-features)
 * [Concurrency Operators](#-concurrency-operators)
 * [Utility Operators](#-utility-operators)
@@ -655,6 +657,125 @@ await source.BroadcastAsync(1);
 // Output:
 // Sub 1: 1
 // Sub 2: 1
+```
+
+-----
+
+## 🌐 WebSocket Support
+
+AiurObserver provides first-class support for WebSockets. The `ObservableWebSocket` class is unique because it is both an **Observable** (for incoming messages) and a **Consumer** (for outgoing messages).
+
+### Installation
+
+```powershell
+# For general WebSocket support (client & shared)
+Install-Package Aiursoft.AiurObserver.WebSocket
+
+# For ASP.NET Core server-side support
+Install-Package Aiursoft.AiurObserver.WebSocket.Server
+```
+
+### Server Side (ASP.NET Core)
+
+In your middleware or controller, you can accept a WebSocket and turn it into an `ObservableWebSocket`:
+
+```csharp
+app.Use(async (context, next) =>
+{
+    if (context.WebSockets.IsWebSocketRequest)
+    {
+        // 1. Accept and wrap
+        var ws = await context.AcceptWebSocketClient();
+
+        // 2. Define logic (e.g., filter and respond)
+        ws.Filter(t => t == "ping")
+          .Map(_ => "pong")
+          .Subscribe(ws); // Since ws is a Consumer, it can subscribe to itself!
+
+        // 3. Start listening (blocks until the connection closes)
+        await ws.Listen(context.RequestAborted);
+    }
+    else
+    {
+        await next();
+    }
+});
+```
+
+### Client Side
+
+You can connect to a remote WebSocket server:
+
+```csharp
+// Connect to a server
+var client = await "ws://example.com/chat".ConnectAsWebSocketServer();
+
+// Receive messages
+client.Subscribe(msg => 
+{
+    Console.WriteLine($"Received: {msg}");
+    return Task.CompletedTask;
+});
+
+// Start listening in a background task
+_ = Task.Run(() => client.Listen());
+
+// Send messages (client is a Consumer)
+await client.Send("Hello server!");
+```
+
+-----
+
+## ⏰ Clock Extension
+
+Package: `Aiursoft.AiurObserver.Clock`
+
+Provides an `ObservableClock` that emits the current time at a regular interval.
+
+```csharp
+var clock = new ObservableClock(TimeSpan.FromSeconds(1));
+clock.Subscribe(now => 
+{
+    Console.WriteLine($"The time is {now}");
+    return Task.CompletedTask;
+});
+
+// Blocks until cancellation
+await clock.StartClock();
+```
+
+-----
+
+## 📜 Stream Extension
+
+Package: `Aiursoft.AiurObserver.Stream`
+
+Turns any `System.IO.Stream` into an observable that emits lines of text.
+
+```csharp
+using var fileStream = File.OpenRead("log.txt");
+var observable = fileStream.ToObservableStream();
+
+observable.Subscribe(line => Console.WriteLine($"New line: {line}"));
+
+await observable.ReadToEndAsync();
+```
+
+-----
+
+## 💻 Command Extension
+
+Package: `Aiursoft.AiurObserver.Command`
+
+Runs a shell command and observes its output and error streams in real-time.
+
+```csharp
+var runner = new LongCommandRunner(logger);
+
+runner.Output.Subscribe(line => Console.WriteLine($"STDOUT: {line}"));
+runner.Error.Subscribe(line => Console.WriteLine($"STDERR: {line}"));
+
+await runner.Run("ping", "google.com", ".");
 ```
 
 -----
