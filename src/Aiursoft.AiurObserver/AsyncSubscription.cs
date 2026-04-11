@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a subscription to an event or observable sequence that can be unsubscribed.
     /// </summary>
-    public class Subscription : ISubscription, IDisposable
+    public class Subscription : ISubscription
     {
         private readonly Action _unsubscribeAction;
 
@@ -23,7 +23,7 @@
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             Unsubscribe();
         }

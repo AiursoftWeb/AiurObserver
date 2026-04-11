@@ -76,20 +76,13 @@ public class IntegrationTests
     }
 
     [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
     public void UnRegisterMultiTimesFailedTest()
     {
         var asyncObservable = new AsyncObservable<int>();
         var subscription = asyncObservable.Subscribe(_ => Task.CompletedTask);
         subscription.Unsubscribe();
-        try
-        {
-            subscription.Unsubscribe();
-            Assert.Fail();
-        }
-        catch (Exception)
-        {
-            // ignored
-        }
+        subscription.Unsubscribe();
     }
 
     [TestMethod]

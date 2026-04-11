@@ -1,6 +1,6 @@
 ﻿namespace Aiursoft.AiurObserver;
 
-public interface ISubscription
+public interface ISubscription : IDisposable
 {
     public void Unsubscribe();
 }

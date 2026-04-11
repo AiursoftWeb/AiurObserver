@@ -11,6 +11,8 @@ AiurObserver is a lightweight, asynchronous C\# implementation of the Observer d
 * [Built-in Consumers](#-built-in-consumers)
 * [WebSocket Deep Dive (Advanced Patterns)](./WebSocket.md)
 * [Clock Deep Dive (Advanced Patterns)](./Clock.md)
+* [Stream Deep Dive (Advanced Patterns)](./Stream.md)
+* [Command Deep Dive (Advanced Patterns)](./Command.md)
 * [Chaining Operators (Features)](#-chaining-operators-features)
 * [Concurrency Operators](#-concurrency-operators)
 * [Utility Operators](#-utility-operators)
@@ -218,7 +220,33 @@ Console.WriteLine(stage.Stage); // 44455
 Console.WriteLine(stage.IsStaged); // True
 ```
 
-### Waiting for Events with StageFirst/StageLast
+### Stage Specific
+
+`StageSpecific(int index)` will keep only the **Nth** (0-based) broadcasted message it receives. This is useful for capturing a specific event in a known sequence.
+
+```csharp
+var asyncObservable = new AsyncObservable<int>();
+var secondMessage = asyncObservable.StageSpecific(1); // 0-based index
+
+await asyncObservable.BroadcastAsync(100);
+await asyncObservable.BroadcastAsync(200); // This one is captured
+await asyncObservable.BroadcastAsync(300);
+
+Console.WriteLine(secondMessage.Stage); // 200
+```
+
+### Message Radio (Simple Relay)
+
+`MessageRadio<T>` is a simple terminal consumer that broadcasts anything it consumes. It's similar to `AsyncReflector<T>` but even simpler, often used as a final leaf in a tree.
+
+```csharp
+var radio = new MessageRadio<int>();
+radio.Subscribe(msg => Console.WriteLine($"Radio played: {msg}"));
+
+await radio.Consume(42); // "Radio played: 42"
+```
+
+### Waiting for Events with Staging Consumers
 
 Both `StageFirst` and `StageLast` provide a `WaitOneEvent()` helper method. This returns a `Task<T>` that completes when the *next* event is staged, allowing you to `await` a broadcast in your procedural code.
 
