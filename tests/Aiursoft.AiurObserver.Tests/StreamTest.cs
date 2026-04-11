@@ -1,4 +1,3 @@
-using Aiursoft.AiurObserver.DefaultConsumers;
 using Aiursoft.AiurObserver.Stream;
 
 namespace Aiursoft.AiurObserver.Tests;

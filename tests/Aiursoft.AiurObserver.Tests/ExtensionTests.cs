@@ -1,5 +1,3 @@
-using Aiursoft.AiurObserver.DefaultConsumers;
-
 namespace Aiursoft.AiurObserver.Tests;
 
 [TestClass]

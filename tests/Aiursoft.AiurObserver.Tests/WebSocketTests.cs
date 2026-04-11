@@ -1,5 +1,4 @@
-﻿using Aiursoft.AiurObserver.DefaultConsumers;
-using Aiursoft.AiurObserver.WebSocket;
+﻿using Aiursoft.AiurObserver.WebSocket;
 using Aiursoft.AiurObserver.WebSocket.Server;
 using Aiursoft.CSTools.Tools;
 using Microsoft.AspNetCore.Builder;
