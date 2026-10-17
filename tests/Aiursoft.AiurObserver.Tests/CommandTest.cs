@@ -9,7 +9,10 @@ namespace Aiursoft.AiurObserver.Tests;
 public class CommandTest
 {
     private readonly string _testCommand =
-        RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "-n 2 www.aiursoft.com" : "-c 2 www.aiursoft.com";
+        RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "-n 2 127.0.0.1" : "-n -c 2 127.0.0.1";
+
+    private readonly string _cancelCommand =
+        RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "-n 10 127.0.0.1" : "-n -c 10 127.0.0.1";
 
     [TestMethod]
     public async Task TestLongRunningCommand()
@@ -39,18 +42,12 @@ public class CommandTest
         runner.Output.Subscribe(counter);
         runner.Output.Subscribe(stage);
         
-        var cancelToken = new CancellationTokenSource();
-        var task = runner.Run("ping", _testCommand, Environment.CurrentDirectory, cancelToken.Token);
+        using var cancelToken = new CancellationTokenSource();
+        var task = runner.Run("ping", _cancelCommand, Environment.CurrentDirectory, cancelToken.Token);
         await Task.Delay(5000, cancelToken.Token);
+        Assert.IsFalse(task.IsCompleted);
         cancelToken.Cancel();
-        try
-        {
-            await task;
-        }
-        catch (Exception e)
-        {
-            Assert.IsTrue(e is TaskCanceledException);
-        }
+        await Assert.ThrowsAsync<OperationCanceledException>(() => task);
         
         Assert.IsGreaterThan(0, counter.Count);
         Assert.IsNotNull(stage.Stage);
