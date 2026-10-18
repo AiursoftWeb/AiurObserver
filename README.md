@@ -1,6 +1,6 @@
 # AiurObserver
 
-[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitlab.aiursoft.com/aiursoft/AiurObserver/-/blob/master/LICENSE)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/AiursoftWeb/aiurobserver/blob/master/LICENSE)
 [![Pipeline stat](https://gitlab.aiursoft.com/aiursoft/AiurObserver/badges/master/pipeline.svg)](https://gitlab.aiursoft.com/aiursoft/AiurObserver/-/pipelines)
 [![Test Coverage](https://gitlab.aiursoft.com/aiursoft/AiurObserver/badges/master/coverage.svg)](https://gitlab.aiursoft.com/aiursoft/AiurObserver/-/pipelines)
 [![NuGet version (Aiursoft.AiurObserver)](https://img.shields.io/nuget/v/Aiursoft.AiurObserver.svg)](https://www.nuget.org/packages/Aiursoft.AiurObserver/)
