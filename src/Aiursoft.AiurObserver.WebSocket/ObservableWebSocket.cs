@@ -6,8 +6,9 @@ namespace Aiursoft.AiurObserver.WebSocket;
 
 public class ObservableWebSocket : AsyncObservable<string>, IConsumer<string>
 {
-    private bool _dropped;
+    private volatile bool _dropped;
     private readonly System.Net.WebSockets.WebSocket _ws;
+    private readonly SemaphoreSlim _sendLock = new(1, 1);
     
     public bool Connected => !_dropped && _ws.State == WebSocketState.Open;
     
@@ -20,8 +21,10 @@ public class ObservableWebSocket : AsyncObservable<string>, IConsumer<string>
         _ws = ws;
     }
     
+    /// <summary>Sends one message; transport failures abort the connection and propagate to the caller.</summary>
     public async Task Send(string message, CancellationToken token = default)
     {
+        await _sendLock.WaitAsync(token);
         try
         {
             if (!Connected)
@@ -32,21 +35,22 @@ public class ObservableWebSocket : AsyncObservable<string>, IConsumer<string>
             var buffer = new ArraySegment<byte>(Encoding.UTF8.GetBytes(message));
             await _ws.SendAsync(buffer, WebSocketMessageType.Text, true, token);
         }
-        catch (WebSocketException)
+        catch (Exception ex) when (ex is WebSocketException or OperationCanceledException or ConnectionAbortedException)
         {
-            _dropped = true;
-            await Close(token);
+            DropConnection();
+            throw;
         }
-        catch (TaskCanceledException)
+        finally
         {
-            _dropped = true;
-            await Close(token);
+            _sendLock.Release();
         }
-        catch (ConnectionAbortedException)
-        {
-            _dropped = true;
-            await Close(token);
-        }
+    }
+
+    private void DropConnection()
+    {
+        _dropped = true;
+        RemoveAllListeners();
+        _ws.Abort();
     }
 
     // ReSharper disable once UnusedMember.Global
@@ -110,8 +114,7 @@ public class ObservableWebSocket : AsyncObservable<string>, IConsumer<string>
         }
         finally
         {
-            _dropped = true;
-            await Close(token);
+            DropConnection();
         }
     }
 
