@@ -1,4 +1,6 @@
-﻿using Aiursoft.AiurObserver.DefaultConsumers;
+﻿using System.Net.WebSockets;
+using Microsoft.AspNetCore.Connections;
+using Aiursoft.AiurObserver.DefaultConsumers;
 using Aiursoft.AiurObserver.WebSocket;
 using Aiursoft.AiurObserver.WebSocket.Server;
 using Aiursoft.CSTools.Tools;
@@ -314,6 +316,68 @@ public class WebSocketTests
 
         await client.Close();
         Assert.IsFalse(client.Connected);
+    }
+
+    [TestMethod]
+    [DataRow(0)]
+    [DataRow(1)]
+    [DataRow(2)]
+    public async Task FailedSendIsVisibleAndReleasesTheReceiveLoop(int failure)
+    {
+        Exception expected = failure switch
+        {
+            0 => new WebSocketException("Connection lost"),
+            1 => new TaskCanceledException("Send timed out"),
+            _ => new ConnectionAbortedException("Peer disconnected")
+        };
+        using var transport = new FailedTransport(expected);
+        var connection = new ObservableWebSocket(transport);
+        var listening = connection.Listen();
+        try
+        {
+            await connection.Send("metrics");
+            Assert.Fail("A failed send must not report success.");
+        }
+        catch (Exception ex) when (ex is WebSocketException or OperationCanceledException or ConnectionAbortedException)
+        {
+            Assert.AreSame(expected, ex);
+        }
+        Assert.IsFalse(connection.Connected);
+        await listening.WaitAsync(TimeSpan.FromSeconds(5));
+        Assert.AreEqual(1, transport.SendAttempts);
+        try
+        {
+            await connection.Send("next metrics");
+            Assert.Fail("A disconnected socket must reject subsequent sends.");
+        }
+        catch (WebSocketException) { }
+        Assert.AreEqual(1, transport.SendAttempts);
+    }
+
+    private sealed class FailedTransport(Exception failure) : System.Net.WebSockets.WebSocket
+    {
+        private readonly TaskCompletionSource<WebSocketReceiveResult> _receive = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private WebSocketState _state = WebSocketState.Open;
+        public int SendAttempts { get; private set; }
+        public override WebSocketCloseStatus? CloseStatus => null;
+        public override string? CloseStatusDescription => null;
+        public override WebSocketState State => _state;
+        public override string? SubProtocol => null;
+        public override void Abort()
+        {
+            _state = WebSocketState.Aborted;
+            _receive.TrySetException(new WebSocketException("Connection aborted"));
+        }
+        public override Task SendAsync(ArraySegment<byte> buffer, WebSocketMessageType messageType, bool endOfMessage, CancellationToken cancellationToken)
+        {
+            SendAttempts++;
+            return Task.FromException(failure);
+        }
+        public override Task<WebSocketReceiveResult> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken) =>
+            _receive.Task.WaitAsync(cancellationToken);
+        public override Task CloseAsync(WebSocketCloseStatus closeStatus, string? statusDescription, CancellationToken cancellationToken) => Task.CompletedTask;
+        public override Task CloseOutputAsync(WebSocketCloseStatus closeStatus, string? statusDescription, CancellationToken cancellationToken) => Task.CompletedTask;
+        public override void Dispose() => Abort();
     }
 
 }
