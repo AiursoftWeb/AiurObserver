@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <Version>10.0.6</Version>
+    <Version>10.0.7</Version>
     <TargetFramework>net10.0</TargetFramework>
     <AssemblyName>Aiursoft.AiurObserver.Extensions</AssemblyName>
     <RootNamespace>Aiursoft.AiurObserver</RootNamespace>
@@ -16,9 +16,9 @@
     <PackageId>Aiursoft.AiurObserver.Extensions</PackageId>
     <PackageTags>nuget package dotnet async observer</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://gitlab.aiursoft.com/aiursoft/aiurobserver</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/AiursoftWeb/aiurobserver</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://gitlab.aiursoft.com/aiursoft/aiurobserver.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/AiursoftWeb/aiurobserver.git</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>

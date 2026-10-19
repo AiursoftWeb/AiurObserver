@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <Version>10.0.14</Version>
+    <Version>10.0.15</Version>
     <TargetFramework>net10.0</TargetFramework>
     <AssemblyName>Aiursoft.AiurObserver.WebSocket</AssemblyName>
     <RootNamespace>Aiursoft.AiurObserver.WebSocket</RootNamespace>
@@ -16,9 +16,9 @@
     <PackageId>Aiursoft.AiurObserver.WebSocket</PackageId>
     <PackageTags>nuget package dotnet csproj dependencies</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://gitlab.aiursoft.com/aiursoft/aiurobserver</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/AiursoftWeb/aiurobserver</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://gitlab.aiursoft.com/aiursoft/aiurobserver.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/AiursoftWeb/aiurobserver.git</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
