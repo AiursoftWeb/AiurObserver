@@ -354,30 +354,14 @@ public class IntegrationTests
     public void TestInvalidSampleDoObservable()
     {
         var asyncObservable = new AsyncObservable<int>();
-        try
-        {
-            asyncObservable.SampleDo(0, _ => Task.CompletedTask);
-            Assert.Fail();
-        }
-        catch (Exception)
-        {
-            // ignored
-        }
+        Assert.ThrowsExactly<ArgumentException>(() => asyncObservable.SampleDo(0, _ => Task.CompletedTask));
     }
 
     [TestMethod]
     public void InvalidSampleObservable()
     {
         var asyncObservable = new AsyncObservable<int>();
-        try
-        {
-            asyncObservable.Sample(0);
-            Assert.Fail();
-        }
-        catch (Exception)
-        {
-            // ignored
-        }
+        Assert.ThrowsExactly<ArgumentException>(() => asyncObservable.Sample(0));
     }
 
     [TestMethod]
@@ -419,15 +403,7 @@ public class IntegrationTests
     public void TestInvalidAggregateObservable()
     {
         var asyncObservable = new AsyncObservable<int>();
-        try
-        {
-            asyncObservable.Aggregate(0);
-            Assert.Fail();
-        }
-        catch (Exception)
-        {
-            // ignored
-        }
+        Assert.ThrowsExactly<ArgumentException>(() => asyncObservable.Aggregate(0));
     }
 
     [TestMethod]
