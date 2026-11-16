@@ -1,4 +1,6 @@
-# AiurObserver
+# Aiursoft AiurObserver
+
+<a name="aiurobserver"></a>
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/AiursoftWeb/aiurobserver/blob/master/LICENSE)
 [![Pipeline stat](https://badge-proxy.aiursoft.com/aiursoft/AiurObserver/badges/master/pipeline.svg)](https://gitlab.aiursoft.com/aiursoft/AiurObserver/-/pipelines)
@@ -13,39 +15,39 @@ Call `Subscribe()` to subscribe to an observable. Call `BroadcastAsync()` to bro
 
 ![structure](assets/structure.png)
 
-## How to install
+## Overview
+
+### What is AiurObserver?
+
+Observe asynchronous object messages, subscribe consumers and compose stream operators.
+
+## Installation
+
+Add the package to your .NET project:
+
+<a name="how-to-install"></a>
 
 ```bash
 dotnet add package Aiursoft.AiurObserver
 ```
 
-## Key Features
+Requires .NET 10 or later.
 
-- **Asynchronous Observation**: AiurObserver provides an AsyncObservable interface. You can create an object that can be observed asynchronously and subscribe to it.
-- **Subscription Operation**: When observing, you need to pass in a Consumer. The consumer is essentially a function that defines what the consumer should do when the source of the subscription pushes.
-- **Data Stream Manipulation**: It provides a set of operators such as Filter, Map, Throttle, Repeat, Sample, Aggregate, etc., that can easily manipulate data streams.
-- **Subscription Cancellation**: If you don't want to consume anymore, you can simply cancel the subscription.
+## Usage
 
-## Use Cases
-
-AiurObserver is particularly suitable for the following scenarios:
-
-- **Running Commands**: Occasionally it will output two lines, but it's uncertain when it will write. I need to subscribe to its output.
-- **WebSocket Remote**: Occasionally something might spit in, but it's uncertain when it will spit in. When it does spit in, I need to take action.
-- **A game of chess**: Players will take actions to change its state. It's uncertain when the chessboard will change; but when it really changes, I also need to execute custom code.
-- **Event Generators**: It's uncertain when an event will occur, but once an event occurs, I need to perform certain operations.
-
-## How to use
+<a name="how-to-use"></a>
 
 It's very simple. You can create a class extends AsyncObservable<T> and then you can subscribe to it and broadcast messages to it.
 
 `T` is the type of the message you want to broadcast.
 
-If you no longer need to subscribe to the observable, you can call `UnRegister` method to unsubscribe.
+If you no longer need to subscribe to the observable, you can call `Unsubscribe` method to unsubscribe.
 
 Full example:
 
 ```csharp
+using Aiursoft.AiurObserver;
+
 var totalMessages = 0;
 var asyncObservable = new AsyncObservable<int>();
 var subscription = asyncObservable.Subscribe(_ =>
@@ -62,7 +64,29 @@ Console.WriteLine(totalMessages); // 10
 subscription.Unsubscribe(); // No longer receive messages.
 ```
 
-## Why it's not IEnumerable or Stream
+### Key Features
+
+<a name="key-features"></a>
+
+- **Asynchronous Observation**: AiurObserver provides an AsyncObservable interface. You can create an object that can be observed asynchronously and subscribe to it.
+- **Subscription Operation**: When observing, you need to pass in a Consumer. The consumer is essentially a function that defines what the consumer should do when the source of the subscription pushes.
+- **Data Stream Manipulation**: It provides a set of operators such as Filter, Map, Throttle, Repeat, Sample, Aggregate, etc., that can easily manipulate data streams.
+- **Subscription Cancellation**: If you don't want to consume anymore, you can simply cancel the subscription.
+
+### Use Cases
+
+<a name="use-cases"></a>
+
+AiurObserver is particularly suitable for the following scenarios:
+
+- **Running Commands**: Occasionally it will output two lines, but it's uncertain when it will write. I need to subscribe to its output.
+- **WebSocket Remote**: Occasionally something might spit in, but it's uncertain when it will spit in. When it does spit in, I need to take action.
+- **A game of chess**: Players will take actions to change its state. It's uncertain when the chessboard will change; but when it really changes, I also need to execute custom code.
+- **Event Generators**: It's uncertain when an event will occur, but once an event occurs, I need to perform certain operations.
+
+### Why it's not IEnumerable or Stream
+
+<a name="why-its-not-ienumerable-or-stream"></a>
 
 While AiurObserver might seem similar to IEnumerable or Stream, it's not a substitute for either.
 
@@ -70,14 +94,40 @@ While AiurObserver might seem similar to IEnumerable or Stream, it's not a subst
 
 - **Stream**: Stream is designed for byte data and is often used for reading and writing to a file or network stream. AiurObserver, on the other hand, is designed for object data and is more suitable for scenarios where data is produced and consumed asynchronously.
 
-## Read document
+## Configuration
+
+No configuration file is required. Subscription consumers and stream operators are supplied in code. Await `BroadcastAsync()` when completion matters, and call the returned subscription's `Unsubscribe()` when it should stop receiving events. Transport-specific packages have their own dependencies and connection settings; see the usage guide rather than assuming the core package opens network connections.
+
+## Development
+
+Install the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
+
+From the repository root, restore, build and test:
+
+```bash
+dotnet restore Aiursoft.AiurObserver.sln
+dotnet build Aiursoft.AiurObserver.sln --no-restore
+dotnet test Aiursoft.AiurObserver.sln --no-restore
+```
+
+Run `./lint.sh` for the existing static checks.
+
+## Documentation
+
+<a name="read-document"></a>
 
 Please click [here](./docs/HowToUse.md) to learn how to use it.
 
 ## How to contribute
 
+<a name="how-to-contribute"></a>
+
 There are many ways to contribute to the project: logging bugs, submitting pull requests, reporting issues, and creating suggestions.
 
-Even if you with push rights on the repository, you should create a personal fork and create feature branches there when you need them. This keeps the main repository clean and your workflow cruft out of sight.
+Even if you have push rights on the repository, you should create a personal fork and create feature branches there when you need them. This keeps the main repository clean and your workflow cruft out of sight.
 
 We're also interested in your feedback on the future of this project. You can submit a suggestion or feature request through the issue tracker. To make this process more effective, we're asking that these include more information to help define them more clearly.
+
+## License
+
+Licensed under the [MIT License](https://github.com/AiursoftWeb/aiurobserver/blob/master/LICENSE).
